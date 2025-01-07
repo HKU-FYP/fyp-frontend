@@ -1,0 +1,81 @@
+.box {
+  border: 3px solid;
+  padding: 25px;
+}
+
+.list-category {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: lightcoral;
+  text-align: center;
+}
+
+.list-items {
+  float: left;
+  font-size: 20px;
+  overflow: hidden;
+  background-color: lightcoral;
+}
+
+.welcome-message {
+  font-family: Arial, sans-serif;
+  font-size: 1.5em;
+  margin: 10px;
+  background-color: blueviolet;
+}
+
+.login-message {
+  font-family: Arial, sans-serif;
+  font-size: 1.5em;
+  margin: 10px;
+  background-color: red;
+}
+
+.student {
+  font-family: Arial, sans-serif;
+  font-size: 1.1em;
+  padding: 10px;
+  border: 1px solid black;
+  margin-top: 10px;
+}
+
+.student p {
+  margin: 0;
+}
+
+.card {
+  border: 1px solid black;
+  border-radius: 10px;
+  box-shadow: 5px 5px 5px #888888;
+  padding: 20px;
+  margin: 10px;
+  width: 200px;
+  text-align: center;
+  max-width: 250px;
+  display: inline-block;
+}
+
+.card .card-image {
+  width: 90%;
+  border-radius: 50%;
+  height: auto;
+  margin-bottom: 10px;
+}
+
+.card .card-title {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.card .card-text {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  color: blue;
+  font-size: 16px;
+  margin-bottom: 10px;
+}

@@ -34,10 +34,10 @@ function SignUp() {
       });
 
       setSuccess(true);
-      navigate("/signin");
+      // navigate("/signin");
 
       // Redirect to login page after successful signup
-      // setTimeout(() => navigate("/signin"), 1500);
+      setTimeout(() => navigate("/signin"), 500);
     } catch (error) {
       if (error.response && error.response.data) {
         setError(error.response.data.detail || "Signup failed");

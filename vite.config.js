@@ -1,7 +1,9 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
 
-// https://vite.dev/config/
 export default defineConfig({
-  plugins: [react()],
-})
+  plugins: [react()], // Plugins array must be properly closed
+  resolve: {
+    extensions: [".js", ".jsx", ".ts", ".tsx"], // Ensure these extensions are resolved
+  },
+});

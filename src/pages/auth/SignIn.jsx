@@ -9,6 +9,7 @@ import {
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { existUserStock } from "../../api/user";
 
 function SignIn() {
   const navigate = useNavigate();
@@ -31,7 +32,13 @@ function SignIn() {
       localStorage.setItem("token", access_token);
 
       // Navigate to a protected route or dashboard
-      navigate("/dashboard");
+      const exist = await existUserStock();
+      console.log("exist:", exist);
+      if (exist) {
+        navigate("/dashboard");
+      } else {
+        navigate("/stock-input");
+      }
     } catch (error) {
       if (error.response && error.response.data) {
         setError(error.response.data.detail || "Login failed");

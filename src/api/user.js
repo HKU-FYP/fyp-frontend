@@ -13,3 +13,15 @@ export const existUserStock = () => {
       throw err;
     });
 };
+
+export const getUserStock = () => {
+  console.log("axios call made");
+  return axios
+    .get(`${BASE_URL}/users/stocks`, {
+      headers: getAuthHeaders(),
+    })
+    .then((resp) => resp.data)
+    .catch((err) => {
+      throw err;
+    });
+};

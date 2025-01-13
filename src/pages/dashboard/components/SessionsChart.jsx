@@ -1,9 +1,8 @@
-import * as React from "react";
+import React from "react";
 import PropTypes from "prop-types";
 import { useTheme } from "@mui/material/styles";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
-import Chip from "@mui/material/Chip";
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import { LineChart } from "@mui/x-charts/LineChart";
@@ -24,41 +23,26 @@ AreaGradient.propTypes = {
   id: PropTypes.string.isRequired,
 };
 
-function getDaysInMonth(month, year) {
-  const date = new Date(year, month, 0);
-  const monthName = date.toLocaleDateString("en-US", {
-    month: "short",
-  });
-  const daysInMonth = date.getDate();
-  const days = [];
-  let i = 1;
-  while (days.length < daysInMonth) {
-    days.push(`${monthName} ${i}`);
-    i += 1;
-  }
-  return days;
-}
-
-export default function SessionsChart() {
+function SessionsChart({ stock_history }) {
   const theme = useTheme();
-  const currentDate = new Date();
-  const currentMonth = currentDate.getMonth() + 1; // Current month
-  const currentYear = currentDate.getFullYear(); // Current year
 
-  const data = getDaysInMonth(currentMonth, currentYear);
+  // Extract dates and close prices from stock history
+  // const xAxisData = stock_history.map((entry) => entry.datetime);
+  const xAxisData = stock_history.map((entry) => {
+    const date = new Date(entry.datetime);
+    return date.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+  });
+  const yAxisData = stock_history.map((entry) => entry.close);
 
-  const colorPalette = [
-    theme.palette.primary.light,
-    theme.palette.primary.main,
-    theme.palette.primary.dark,
-  ];
+  // Determine start and end dates for x-axis
+  const startDate = xAxisData[xAxisData.length - 1]; // Oldest date
+  const endDate = xAxisData[0]; // Most recent date
+
+  const colorPalette = [theme.palette.primary.light];
 
   return (
     <Card variant="outlined" sx={{ width: "100%" }}>
       <CardContent>
-        {/* <Typography component="h2" variant="subtitle2" gutterBottom>
-          Stock Price History
-        </Typography> */}
         <Stack sx={{ justifyContent: "space-between" }}>
           <Stack
             direction="row"
@@ -71,10 +55,9 @@ export default function SessionsChart() {
             <Typography variant="h6" component="p">
               Stock Price History
             </Typography>
-            {/* <Chip size="small" color="success" label="+35%" /> */}
           </Stack>
           <Typography variant="caption" sx={{ color: "text.secondary" }}>
-            Stock price per day for the last 30 days -
+            Stock prices from {startDate} to {endDate}
           </Typography>
         </Stack>
         <LineChart
@@ -82,72 +65,33 @@ export default function SessionsChart() {
           xAxis={[
             {
               scaleType: "point",
-              data,
+              data: xAxisData.reverse(), // Reverse to show oldest first
               tickInterval: (index, i) => (i + 1) % 5 === 0,
             },
           ]}
           yAxis={[
             {
-              min: 200,
+              min: Math.min(...yAxisData) - 5, // Add margin below min value
             },
           ]}
           series={[
             {
-              id: "direct",
-              label: "Direct",
+              id: "stock_close",
+              label: "Closing Price",
               showMark: false,
               curve: "linear",
               stack: "total",
               area: true,
               stackOrder: "ascending",
-              data: [
-                222.45, 224.8, 223.55, 226.9, 229.35, 227.6, 225.2, 228.15,
-                230.4, 229.1, 232.25, 231.9, 208.8, 226.5, 227.95, 229.3,
-                231.75, 230.1, 228.65, 226.4, 227.8, 230.25, 232.9, 235.15,
-                233.1, 231.4, 230.25, 235.9, 240.8, 242.75,
-              ],
+              data: yAxisData.reverse(), // Reverse to align with x-axis
             },
-            // {
-            //   id: "referral",
-            //   label: "Referral",
-            //   showMark: false,
-            //   curve: "linear",
-            //   stack: "total",
-            //   area: true,
-            //   stackOrder: "ascending",
-            //   data: [
-            //     500, 900, 700, 1400, 1100, 1700, 2300, 2000, 2600, 2900, 2300,
-            //     3200, 3500, 3800, 4100, 4400, 2900, 4700, 5000, 5300, 5600,
-            //     5900, 6200, 6500, 5600, 6800, 7100, 7400, 7700, 8000,
-            //   ],
-            // },
-            // {
-            //   id: "organic",
-            //   label: "Organic",
-            //   showMark: false,
-            //   curve: "linear",
-            //   stack: "total",
-            //   stackOrder: "ascending",
-            //   data: [
-            //     1000, 1500, 1200, 1700, 1300, 2000, 2400, 2200, 2600, 2800,
-            //     2500, 3000, 3400, 3700, 3200, 3900, 4100, 3500, 4300, 4500,
-            //     4000, 4700, 5000, 5200, 4800, 5400, 5600, 5900, 6100, 6300,
-            //   ],
-            //   area: true,
-            // },
           ]}
           height={250}
           margin={{ left: 50, right: 20, top: 20, bottom: 20 }}
           grid={{ horizontal: true }}
           sx={{
-            "& .MuiAreaElement-series-organic": {
-              fill: "url('#organic')",
-            },
-            "& .MuiAreaElement-series-referral": {
-              fill: "url('#referral')",
-            },
-            "& .MuiAreaElement-series-direct": {
-              fill: "url('#direct')",
+            "& .MuiAreaElement-series-stock_close": {
+              fill: "url('#stock_close')",
             },
           }}
           slotProps={{
@@ -156,11 +100,24 @@ export default function SessionsChart() {
             },
           }}
         >
-          {/* <AreaGradient color={theme.palette.primary.dark} id="organic" /> */}
-          {/* <AreaGradient color={theme.palette.primary.main} id="referral" /> */}
-          <AreaGradient color={theme.palette.primary.light} id="direct" />
+          <AreaGradient color={theme.palette.primary.light} id="stock_close" />
         </LineChart>
       </CardContent>
     </Card>
   );
 }
+
+SessionsChart.propTypes = {
+  stock_history: PropTypes.arrayOf(
+    PropTypes.shape({
+      datetime: PropTypes.string.isRequired,
+      open: PropTypes.number.isRequired,
+      high: PropTypes.number.isRequired,
+      low: PropTypes.number.isRequired,
+      close: PropTypes.number.isRequired,
+      volume: PropTypes.number.isRequired,
+    })
+  ).isRequired,
+};
+
+export default SessionsChart;

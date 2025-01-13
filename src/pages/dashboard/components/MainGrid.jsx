@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState, memo } from "react";
 import Grid from "@mui/material/Grid2";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
@@ -15,6 +15,7 @@ import StatCard from "./StatCard";
 import TradingVolume from "./TradingVolume";
 import { GlobalContext } from "../../../GlobalContext";
 import { getUserStock } from "../../../api/user";
+import { getStockDetailInfo } from "../../../api/stock";
 import axios from "axios";
 
 // Define fetchUserStock outside of useEffect
@@ -38,6 +39,13 @@ export default function MainGrid() {
   // const { selectedStockGlobal, setSelectedStockGlobal } =
   //   useContext(GlobalContext);
   const [selectedStockGlobal, setSelectedStockGlobal] = useState({});
+  const [datetime, setDatetime] = useState("");
+  const [open, setOpen] = useState(0.0);
+  const [volume, setVolume] = useState(0);
+  const [percentChange, setPercentChange] = useState(0.0);
+  const [isMarketOpen, setIsMarketOpen] = useState(false);
+  const [cardData, setCardData] = useState([]);
+  const [stockHistory, setStockHistory] = useState([]);
 
   const fetchUserStockSync = async () => {
     try {
@@ -48,6 +56,69 @@ export default function MainGrid() {
         ticker: userStock.ticker,
         name: userStock.name,
       });
+
+      const stockDetailInfo = await getStockDetailInfo(userStock.ticker);
+      setCardData((prev) => {
+        if (prev.some((item) => item.title === "Stock Price")) {
+          return prev;
+        }
+        console.log(stockDetailInfo.percent_change);
+
+        return [
+          ...prev,
+          {
+            title: "Stock Price",
+            value: `${stockDetailInfo.open} USD`,
+            percentChange: stockDetailInfo.percent_change,
+          },
+        ];
+      });
+
+      setCardData((prev) => {
+        if (prev.some((item) => item.title === "Exchange")) {
+          return prev;
+        }
+
+        return [
+          ...prev,
+          {
+            title: "Exchange",
+            value: `${stockDetailInfo.exchange}`,
+          },
+        ];
+      });
+
+      setCardData((prev) => {
+        if (prev.some((item) => item.title === "Previous Close")) {
+          return prev;
+        }
+
+        return [
+          ...prev,
+          {
+            title: "Previous Close",
+            value: `${stockDetailInfo.previous_close} USD`,
+          },
+        ];
+      });
+
+      setCardData((prev) => {
+        if (prev.some((item) => item.title === "Change")) {
+          return prev;
+        }
+
+        return [
+          ...prev,
+          {
+            title: "Change",
+            value: `${stockDetailInfo.change} USD`,
+          },
+        ];
+      });
+
+      setStockHistory((prev) => {
+        return stockDetailInfo.stock_history;
+      });
     } catch (error) {
       console.error("Failed to fetch user stock:", error);
     }
@@ -57,68 +128,32 @@ export default function MainGrid() {
     fetchUserStockSync();
   }, []);
 
-  // useEffect(() => {
-  //   getUserStock()
-  //     .then((userStocks) => {
-  //       const userStock = userStocks[0];
-  //       console.log("userStocks", userStocks);
-  //       setSelectedStockGlobal({
-  //         id: userStock.id,
-  //         ticker: userStock.ticker,
-  //         name: userStock.name,
-  //       });
-  //     })
-  //     .catch((error) => {
-  //       console.error("Failed to fetch user stock:", error);
-  //     });
-  // }, []);
-
-  const data = [
-    {
-      title: "Stock Price",
-      value: "242.72 USD",
-      interval: "Last 30 days",
-      trend: "up",
-      data: [
-        200, 24, 220, 260, 240, 380, 100, 240, 280, 240, 300, 340, 320, 360,
-        340, 380, 360, 400, 380, 420, 400, 640, 340, 460, 440, 480, 460, 600,
-        880, 920,
-      ],
-    },
-    {
-      title: "Exchange",
-      value: "NASDAQ (America/NY)",
-      interval: "Last 30 days",
-      trend: "",
-      data: [
-        1640, 1250, 970, 1130, 1050, 900, 720, 1080, 900, 450, 920, 820, 840,
-        600, 820, 780, 800, 760, 380, 740, 660, 620, 840, 500, 520, 480, 400,
-        360, 300, 220,
-      ],
-    },
-    {
-      title: "Rolling Period Change",
-      value: "123.123",
-      interval: "Last 30 days",
-      trend: "neutral",
-      data: [
-        500, 400, 510, 530, 520, 600, 530, 520, 510, 730, 520, 510, 530, 620,
-        510, 530, 520, 410, 530, 520, 610, 530, 520, 610, 530, 420, 510, 430,
-        520, 510,
-      ],
-    },
-    {
-      title: "Average Volume",
-      value: "83571571",
-      interval: "Last 30 days",
-      trend: "down",
-      data: [
-        500, 400, 510, 530, 520, 600, 530, 520, 510, 730, 520, 510, 530, 620,
-        510, 530, 520, 410, 530, 520, 610, 530, 520, 610, 530, 420, 510, 430,
-        520, 510,
-      ],
-    },
-  ];
+  // const data = [
+  //   {
+  //     title: "Stock Price",
+  //     value: "242.72 USD",
+  //     interval: "Last 30 days",
+  //     trend: "up",
+  //   },
+  //   {
+  //     title: "Exchange",
+  //     value: "NASDAQ (America/NY)",
+  //     interval: "Last 30 days",
+  //     trend: "",
+  //   },
+  //   {
+  //     title: "Rolling Period Change",
+  //     value: "123.123",
+  //     interval: "Last 30 days",
+  //     trend: "neutral",
+  //   },
+  //   {
+  //     title: "Average Volume",
+  //     value: "83571571",
+  //     interval: "Last 30 days",
+  //     trend: "down",
+  //   },
+  // ];
 
   const newsData = [
     {
@@ -175,7 +210,8 @@ export default function MainGrid() {
       <Typography component="h2" variant="h6" sx={{ mb: 2 }}>
         {selectedStockGlobal &&
         selectedStockGlobal.ticker &&
-        selectedStockGlobal.name
+        selectedStockGlobal.name &&
+        cardData.length > 0
           ? `${selectedStockGlobal.ticker} (${selectedStockGlobal.name})`
           : "Loading..."}
       </Typography>
@@ -186,7 +222,7 @@ export default function MainGrid() {
         columns={12}
         sx={{ mb: (theme) => theme.spacing(2) }}
       >
-        {data.map((card, index) => (
+        {cardData.map((card, index) => (
           <Grid key={index} size={{ xs: 12, sm: 6, lg: 3 }}>
             <StatCard {...card} />
           </Grid>
@@ -195,10 +231,14 @@ export default function MainGrid() {
           <HighlightedCard />
         </Grid> */}
         <Grid size={{ xs: 12, md: 6 }}>
-          <SessionsChart />
+          {stockHistory.length > 0 && (
+            <SessionsChart stock_history={stockHistory} />
+          )}
         </Grid>
         <Grid size={{ xs: 12, md: 6 }}>
-          <TradingVolume />
+          {stockHistory.length > 0 && (
+            <TradingVolume stock_history={stockHistory} />
+          )}
         </Grid>
       </Grid>
       <Typography component="h2" variant="h6" sx={{ mb: 2 }}>

@@ -41,7 +41,8 @@ AreaGradient.propTypes = {
   id: PropTypes.string.isRequired,
 };
 
-function StatCard({ title, value, interval, trend, data }) {
+function StatCard({ title, value, percentChange, comment }) {
+  console.log("percentCHange", percentChange);
   const theme = useTheme();
   const daysInWeek = getDaysInMonth(4, 2024);
 
@@ -66,14 +67,20 @@ function StatCard({ title, value, interval, trend, data }) {
     neutral: "default",
   };
 
-  const color = labelColors[trend];
-  const chartColor = trendColors[trend];
+  // const color = labelColors[trend];
+  // const chartColor = trendColors[trend];
   const trendValues = { up: "+8%", down: "-2%", neutral: "+5%" };
+  let color;
+  if (percentChange && percentChange > 0) {
+    color = "success";
+  } else {
+    color = "error";
+  }
 
   return (
     <Card variant="outlined" sx={{ height: "100%", flexGrow: 1 }}>
       <CardContent>
-        <Typography component="h2" variant="subtitle2" gutterBottom>
+        <Typography component="h4" variant="subtitle1" gutterBottom>
           {title}
         </Typography>
         <Stack
@@ -88,12 +95,21 @@ function StatCard({ title, value, interval, trend, data }) {
               <Typography variant="h4" component="p">
                 {value}
               </Typography>
-              <Chip size="small" color={color} label={trendValues[trend]} />
+              {/* <Chip size="small" color={color} label={trendValues[trend]} /> */}
+              {percentChange && (
+                <Chip
+                  size="small"
+                  color={color}
+                  label={`${parseFloat(percentChange.toFixed(1))}%`}
+                />
+              )}
             </Stack>
-            <Typography variant="caption" sx={{ color: "text.secondary" }}>
-              {interval}
-            </Typography>
           </Stack>
+          {comment && (
+            <Typography component="h4" variant="subtitle2" gutterBottom>
+              placeholder...
+            </Typography>
+          )}
           {/* <Box sx={{ width: '100%', height: 50 }}>
             <SparkLineChart
               colors={[chartColor]}
@@ -121,11 +137,12 @@ function StatCard({ title, value, interval, trend, data }) {
 }
 
 StatCard.propTypes = {
-  data: PropTypes.arrayOf(PropTypes.number).isRequired,
-  interval: PropTypes.string.isRequired,
+  // data: PropTypes.arrayOf(PropTypes.number).isRequired,
+  // interval: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
-  trend: PropTypes.oneOf(["down", "neutral", "up"]).isRequired,
+  // trend: PropTypes.oneOf(["down", "neutral", "up"]).isRequired,
   value: PropTypes.string.isRequired,
+  percentChange: PropTypes.string,
 };
 
 export default StatCard;

@@ -15,6 +15,7 @@ export type StatCardProps = {
   interval: string;
   trend: "up" | "down" | "neutral";
   data: number[];
+  percentChange: number;
 };
 
 function getDaysInMonth(month: number, year: number) {
@@ -46,10 +47,11 @@ function AreaGradient({ color, id }: { color: string; id: string }) {
 export default function StatCard({
   title,
   value,
-  interval,
-  trend,
-  data,
-}: StatCardProps) {
+  percentChange,
+}: // interval,
+// trend,
+// data,
+StatCardProps) {
   const theme = useTheme();
   const daysInWeek = getDaysInMonth(4, 2024);
 
@@ -74,7 +76,10 @@ export default function StatCard({
     neutral: "default" as const,
   };
 
-  const color = labelColors[trend];
+  if (percentChange !== null) {
+    const color;
+  }
+  // const color = labelColors[trend];
   const chartColor = trendColors[trend];
   const trendValues = { up: "+8%", down: "-25%", neutral: "+5%" };
 
@@ -96,14 +101,14 @@ export default function StatCard({
               <Typography variant="h4" component="p">
                 {value}
               </Typography>
-              <Chip size="small" color={color} label={trendValues[trend]} />
+              {/* <Chip size="small" color={color} label={trendValues[trend]} /> */}
             </Stack>
-            <Typography variant="caption" sx={{ color: "text.secondary" }}>
+            {/* <Typography variant="caption" sx={{ color: "text.secondary" }}>
               {interval}
-            </Typography>
+            </Typography> */}
           </Stack>
           <Box sx={{ width: "100%", height: 50 }}>
-            <SparkLineChart
+            {/* <SparkLineChart
               colors={[chartColor]}
               data={data}
               area
@@ -120,7 +125,7 @@ export default function StatCard({
               }}
             >
               <AreaGradient color={chartColor} id={`area-gradient-${value}`} />
-            </SparkLineChart>
+            </SparkLineChart> */}
           </Box>
         </Stack>
       </CardContent>

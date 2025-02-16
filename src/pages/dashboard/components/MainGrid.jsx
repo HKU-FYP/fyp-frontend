@@ -205,7 +205,9 @@ export default function MainGrid() {
   ];
 
   return (
-    <Box sx={{ width: "100%", maxWidth: { sm: "100%", md: "1700px" } }}>
+    <Box sx={{ width: "100%", maxWidth: { sm: "100%", md: "1700px" }, 
+    display: "flex", flexDirection: "row", gap: 2 }}>
+    <Box sx={{ flex: 1.3 }}>
       {/* cards */}
       <Typography component="h2" variant="h6" sx={{ mb: 2 }}>
         {selectedStockGlobal &&
@@ -241,6 +243,8 @@ export default function MainGrid() {
           )}
         </Grid>
       </Grid>
+      </Box>
+      <Box sx={{ flex: 1 }}>
       <Typography component="h2" variant="h6" sx={{ mb: 2 }}>
         Personalized News Curation
       </Typography>
@@ -260,7 +264,7 @@ export default function MainGrid() {
           </Stack>
         </Grid> */}
       </Grid>
-      <Copyright sx={{ my: 4 }} />
+      </Box>
     </Box>
   );
 }

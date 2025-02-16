@@ -9,6 +9,7 @@ import Header from "./components/Header";
 import MainGrid from "./components/MainGrid";
 import SideMenu from "./components/SideMenu";
 import AppTheme from "../shared-theme/AppTheme";
+import Copyright from "./internals/components/Copyright";
 import {
   chartsCustomizations,
   dataGridCustomizations,
@@ -52,6 +53,7 @@ export default function Dashboard(props) {
           >
             <Header />
             <MainGrid />
+            <Copyright sx={{ my: 4 }} />
           </Stack>
         </Box>
       </Box>

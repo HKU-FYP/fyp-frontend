@@ -11,6 +11,9 @@ function ThemeProvider({ children }) {
       createTheme({
         palette: {
           mode: "light",
+          primary: {
+            main: "#0b6e69",
+          },
         },
       }),
     []

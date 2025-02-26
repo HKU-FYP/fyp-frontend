@@ -9,6 +9,9 @@ import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { SparkLineChart } from "@mui/x-charts/SparkLineChart";
 import { areaElementClasses } from "@mui/x-charts/LineChart";
+import {useNavigate} from "react-router-dom";
+import Button from '@mui/material/Button';
+
 
 function getDaysInMonth(month, year) {
   const date = new Date(year, month, 0);
@@ -41,7 +44,7 @@ AreaGradient.propTypes = {
   id: PropTypes.string.isRequired,
 };
 
-function StatCard({ title, value, percentChange, comment }) {
+function StatCard({ title, value, analysis, percentChange, comment }) {
   console.log("percentCHange", percentChange);
   const theme = useTheme();
   const daysInWeek = getDaysInMonth(4, 2024);
@@ -77,6 +80,8 @@ function StatCard({ title, value, percentChange, comment }) {
     color = "error";
   }
 
+  const navigate = useNavigate();
+
   return (
     <Card variant="outlined" sx={{ height: "100%", flexGrow: 1 }}>
       <CardContent>
@@ -84,31 +89,34 @@ function StatCard({ title, value, percentChange, comment }) {
           {title}
         </Typography>
         <Stack
-          direction="column"
-          sx={{ justifyContent: "space-between", flexGrow: "1", gap: 1 }}
+            direction="column"
+            sx={{justifyContent: "space-between", flexGrow: "1", gap: 1}}
         >
-          <Stack sx={{ justifyContent: "space-between" }}>
+          <Stack sx={{justifyContent: "space-between"}}>
             <Stack
-              direction="row"
-              sx={{ justifyContent: "space-between", alignItems: "center" }}
+                direction="row"
+                sx={{justifyContent: "space-between", alignItems: "center"}}
             >
-              <Typography variant="h4" component="p">
+              <Typography variant="h5" component="p">
                 {value}
               </Typography>
-              {/* <Chip size="small" color={color} label={trendValues[trend]} /> */}
+               {/*<Chip size="small" color={color} label={trendValues[trend]} />*/}
               {percentChange && (
-                <Chip
-                  size="small"
-                  color={color}
-                  label={`${parseFloat(percentChange.toFixed(1))}%`}
-                />
+                  <Chip
+                      size="small"
+                      color={color}
+                      label={`${parseFloat(percentChange.toFixed(1))}%`}
+                  />
               )}
+              <Button variant="outlined" onClick={() => navigate("/dashboard/news")}>See Details</Button>
             </Stack>
           </Stack>
+          <Typography variant={"subtitle2"} component={"p"}>{analysis}</Typography>
+          {/*<Button variant="outlined" onClick={() => navigate("/dashboard/news")}>See Details</Button>*/}
           {comment && (
-            <Typography component="h4" variant="subtitle2" gutterBottom>
-              placeholder...
-            </Typography>
+              <Typography component="h4" variant="subtitle2" gutterBottom>
+                placeholder...
+              </Typography>
           )}
           {/* <Box sx={{ width: '100%', height: 50 }}>
             <SparkLineChart

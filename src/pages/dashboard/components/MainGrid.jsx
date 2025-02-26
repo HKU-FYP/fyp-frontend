@@ -17,6 +17,7 @@ import { GlobalContext } from "../../../GlobalContext";
 import { getUserStock } from "../../../api/user";
 import { getStockDetailInfo } from "../../../api/stock";
 import axios from "axios";
+import {useNavigate} from "react-router-dom";
 
 // Define fetchUserStock outside of useEffect
 // const fetchUserStock = (setSelectedStockGlobal) => {
@@ -46,6 +47,8 @@ export default function MainGrid() {
   const [isMarketOpen, setIsMarketOpen] = useState(false);
   const [cardData, setCardData] = useState([]);
   const [stockHistory, setStockHistory] = useState([]);
+
+  const navigate = useNavigate();
 
   const fetchUserStockSync = async () => {
     try {
@@ -161,6 +164,7 @@ export default function MainGrid() {
       value:
         "If You’d Invested $1,000 in Apple During Trump’s First Presidency, What Would It Be Worth Now?",
       interval: "Last 30 days",
+      analysis: "Analysis",
       trend: "",
       data: [
         200, 24, 220, 260, 240, 380, 100, 240, 280, 240, 300, 340, 320, 360,
@@ -171,6 +175,7 @@ export default function MainGrid() {
     {
       title: "Yahoo Finance",
       value: "Why Apple Stock Gained 30% Last Year",
+      analysis: "Analysis",
       interval: "Last 30 days",
       trend: "",
       data: [
@@ -183,6 +188,7 @@ export default function MainGrid() {
       title: "Bloomberg",
       value: "Indonesian officials to discuss Apple investment proposal",
       interval: "Last 30 days",
+      analysis: "Analysis",
       trend: "",
       data: [
         500, 400, 510, 530, 520, 600, 530, 520, 510, 730, 520, 510, 530, 620,
@@ -195,6 +201,7 @@ export default function MainGrid() {
       value:
         "Apple stock touches intraday high after nod of confidence from Wall Street",
       interval: "Last 30 days",
+      analysis: "Analysis",
       trend: "",
       data: [
         500, 400, 510, 530, 520, 600, 530, 520, 510, 730, 520, 510, 530, 620,

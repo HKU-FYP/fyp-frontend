@@ -10,6 +10,7 @@ import GlobalAlertManager from "./GlobalAlertManager";
 // import SignInSide from "./pages/sign-in-side/SignInSide.jsx";
 import SignInSide from "./pages/sign-in-side/SignInSide.tsx";
 import Dashboard from "./pages/dashboard/Dashboard.jsx";
+import NewsDetail from "./pages/dashboard/components/NewsDetail.jsx";
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
             <Route path="/signup" element={<SignUp />} />
             <Route path="/stock-input" element={<StockInput />} />
             <Route path="dashboard" element={<Dashboard />} />
+            <Route path="/dashboard/news" element={<NewsDetail />} />
           </Routes>
         </Router>
       </ThemeProvider>

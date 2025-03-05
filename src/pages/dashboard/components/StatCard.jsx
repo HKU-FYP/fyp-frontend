@@ -108,7 +108,6 @@ function StatCard({ title, value, analysis, percentChange, comment }) {
                       label={`${parseFloat(percentChange.toFixed(1))}%`}
                   />
               )}
-              <Button variant="outlined" onClick={() => navigate("/dashboard/news")}>See Details</Button>
             </Stack>
           </Stack>
           <Typography variant={"subtitle2"} component={"p"}>{analysis}</Typography>

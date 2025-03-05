@@ -9,7 +9,7 @@ import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import AppNavbar from "./components/AppNavbar";
 import Header from "./components/Header";
-import MainGrid from "./components/MainGrid";
+import MainGrid from "./components/MainGridTemplate";
 import SideMenu from "./components/SideMenu";
 import AppTheme from "../shared-theme/AppTheme";
 import {

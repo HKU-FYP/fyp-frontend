@@ -10,6 +10,7 @@ import {getUserStock} from "../../../api/user";
 import {getStockDetailInfo} from "../../../api/stock";
 import {useNavigate} from "react-router-dom";
 import StatCardNewsList from "./StatCardNewsList.jsx";
+import { getNewsByUserStockId } from "../../../api/news";
 
 
 export const newsData = [
@@ -84,6 +85,7 @@ export default function MainGrid() {
     const [selectedStockGlobal, setSelectedStockGlobal] = useState({});
     const [cardData, setCardData] = useState([]);
     const [stockHistory, setStockHistory] = useState([]);
+    const [newsData, setNewsData] = useState([]); // Add state for news data
 
     const navigate = useNavigate();
 
@@ -159,6 +161,12 @@ export default function MainGrid() {
             setStockHistory((prev) => {
                 return stockDetailInfo.stock_history;
             });
+
+            // **Fetch news data**
+            const news = await getNewsByUserStockId(1); //TODO replace with user_stock_id
+            setNewsData(news);
+
+
         } catch (error) {
             console.error("Failed to fetch user stock:", error);
         }

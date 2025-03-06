@@ -12,33 +12,6 @@ import List from "@mui/material/List";
 
 export default function NewsDetail() {
 
-    //
-    // const newsDetailData = [
-    //     {
-    //         id: 1,
-    //         title: "If You’d Invested $1,000 in Apple During Trump’s First Presidency, What Would It Be Worth Now?",
-    //
-    //     },
-    //     {
-    //         id: 2,
-    //         title: "Why Apple Stock Gained 30% Last Year",
-    //         summary: "Summary",
-    //         analysis: "Analysis"
-    //     },
-    //     {
-    //         id: 3,
-    //         title: "Indonesian officials to discuss Apple investment proposal",
-    //         summary: "Summary",
-    //         analysis: "Analysis"
-    //     },
-    //     {
-    //         id: 4,
-    //         title: "Apple stock touches intraday high after nod of confidence from Wall Street",
-    //         summary: "Summary",
-    //         analysis: "Analysis"
-    //     },
-    // ]
-
     const [selectedButton, setSelectedButton] = useState('Intermediate');
 
     const { id } = useParams();
@@ -59,22 +32,25 @@ export default function NewsDetail() {
     };
 
     return (
-        <Box sx={{padding: '20px'}}>
+        <Box sx={{
+            padding: '20px',
+            justifyContent: 'center',
+            paddingX: '400px',
+        }}>
 
             <Stack spacing={1.5}>
-                <Typography variant="h4" sx={{fontWeight: 'bold'}}>
+                <Typography variant="h5" sx={{fontWeight: 'bold'}}>
                     {newsDetail.title}
                 </Typography>
 
-                <h2> Summary</h2>
+                <h3> Summary</h3>
                 <Typography variant="body1">{newsDetail.summary}</Typography>
                 {/*<Skeleton variant="rectangular" height={200}/>*/}
 
                 {/*<h2> Content</h2>*/}
                 {/*<Typography variant="body1">{newsDetail.content}</Typography>*/}
 
-
-                <h2>Key Metrics</h2>
+                <h3>Key Metrics</h3>
                 <List>
                     {newsDetail.key_metrics.map((metric, index) => (
                         <ListItem key={index}>
@@ -83,12 +59,11 @@ export default function NewsDetail() {
                     ))}
                 </List>
 
-                <h2> Stock impact analysis </h2>
-
+                <h3> Sentiment analysis </h3>
                 <Typography variant="body1">Overall Sentiment: {newsDetail.sentiment}</Typography>
                 <Typography variant="body1">{newsDetail.sentiment_analysis}</Typography>
 
-                {/*<Typography variant="body1">{newsDetail.fullanalysis}</Typography>*/}
+                <h3> Stock impact analysis </h3>
                 <Typography variant="body1">
                     {selectedButton === 'Beginner' && (newsDetail.stock_impact_analysis_easy || fullanalysis)}
                     {selectedButton === 'Intermediate' && (newsDetail.stock_impact_analysis_intermediate || fullanalysis)}

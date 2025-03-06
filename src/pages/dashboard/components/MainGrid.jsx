@@ -99,6 +99,7 @@ export default function MainGrid() {
                 name: userStock.name,
             });
 
+
             const stockDetailInfo = await getStockDetailInfo(userStock.ticker);
             setCardData((prev) => {
                 if (prev.some((item) => item.title === "Stock Price")) {
@@ -181,7 +182,7 @@ export default function MainGrid() {
             width: "100%", maxWidth: {sm: "100%", md: "1700px"},
             display: "flex", flexDirection: "row", gap: 2
         }}>
-            <Box sx={{flex: 1.3}}>
+            <Box sx={{flex: 1.6}}>
                 {/* cards */}
                 <Typography component="h2" variant="h6" sx={{mb: 2}}>
                     {selectedStockGlobal &&

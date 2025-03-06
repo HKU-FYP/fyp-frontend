@@ -111,7 +111,7 @@ export default function MainGrid() {
                     ...prev,
                     {
                         title: "Stock Price",
-                        value: `${stockDetailInfo.open} USD`,
+                        value: `${stockDetailInfo.open.toFixed(2)} USD`,
                         percentChange: stockDetailInfo.percent_change,
                     },
                 ];
@@ -140,7 +140,7 @@ export default function MainGrid() {
                     ...prev,
                     {
                         title: "Previous Close",
-                        value: `${stockDetailInfo.previous_close} USD`,
+                        value: `${stockDetailInfo.previous_close.toFixed(2)} USD`,
                     },
                 ];
             });
@@ -154,7 +154,7 @@ export default function MainGrid() {
                     ...prev,
                     {
                         title: "Change",
-                        value: `${stockDetailInfo.change} USD`,
+                        value: `${stockDetailInfo.change.toFixed(2)} USD`,
                     },
                 ];
             });

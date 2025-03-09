@@ -5,6 +5,8 @@ import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Typography, Box, Paper, Divider, Card, CardContent, List, ListItem, ListItemText } from "@mui/material";
 import { getNewsDetailByNewsId } from "../../../api/news.js";
+import Chip from "@mui/material/Chip";
+import * as React from "react";
 
 export default function NewsDetail() {
     const [selectedButton, setSelectedButton] = useState('Intermediate');
@@ -17,13 +19,17 @@ export default function NewsDetail() {
             .catch((error) => console.error("Failed to fetch news detail:", error));
     }, [id]);
 
-    if (!newsDetail) {
-        return <Skeleton variant="rectangular" height={400} sx={{ borderRadius: 2, margin: 'auto', width: '80%' }} />;
-    }
 
     const handleButtonClick = (button) => {
         setSelectedButton(button);
     };
+
+    if (!newsDetail) return null;
+
+    const sentimentColor = newsDetail?.sentiment === "Positive" ? "success"
+        : newsDetail?.sentiment === "Negative" ? "error"
+            : "warning";
+
 
     return (
         <Box sx={{
@@ -83,11 +89,12 @@ export default function NewsDetail() {
                             <Typography variant="h6" sx={{ fontWeight: 'bold', color: '#000', marginBottom: '10px' }}>
                                 Sentiment Analysis
                             </Typography>
-                            <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
+                            <Typography variant="body1" sx={{ fontWeight: 'bold', marginBottom: "4px" }}>
                                 Overall Sentiment:
-                                <span style={{ color: newsDetail.sentiment === 'Positive' ? 'green' : newsDetail.sentiment === 'Negative' ? 'red' : '#ff9800' }}>
-                                    {` ${newsDetail.sentiment}`}
-                                </span>
+                                <Chip label={newsDetail.sentiment} color={sentimentColor} sx={{ml: '4px', mb: '2px'}} size="small" />
+                                {/*<span style={{ color: newsDetail.sentiment === 'Positive' ? 'green' : newsDetail.sentiment === 'Negative' ? 'red' : '#ff9800' }}>*/}
+                                {/*    {` ${newsDetail.sentiment}`}*/}
+                                {/*</span>*/}
                             </Typography>
                             <Typography variant="body1">{newsDetail.sentiment_analysis}</Typography>
                         </CardContent>
@@ -104,11 +111,8 @@ export default function NewsDetail() {
                                 {selectedButton === 'Intermediate' && (newsDetail.stock_impact_analysis_intermediate || newsDetail.fullanalysis)}
                                 {selectedButton === 'Expert' && (newsDetail.stock_impact_analysis_expert || newsDetail.fullanalysis)}
                             </Typography>
-                        </CardContent>
-                    </Card>
 
-                    {/* Buttons */}
-                    <Stack spacing={2} direction="row" justifyContent="center">
+                            <Stack spacing={2} paddingTop={"20px"} direction="row" justifyContent="center">
                         <Button
                             variant={selectedButton === 'Beginner' ? 'contained' : 'outlined'}
                             color="primary"
@@ -137,6 +141,8 @@ export default function NewsDetail() {
                             Expert
                         </Button>
                     </Stack>
+                        </CardContent>
+                    </Card>
                 </Stack>
             </Paper>
         </Box>

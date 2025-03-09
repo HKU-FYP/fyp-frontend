@@ -1,16 +1,16 @@
 import Skeleton from '@mui/material/Skeleton';
 import Stack from '@mui/material/Stack';
 import Button from "@mui/material/Button";
-import { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import { Typography, Box, Paper, Divider, Card, CardContent, List, ListItem, ListItemText } from "@mui/material";
-import { getNewsDetailByNewsId } from "../../../api/news.js";
+import {useState, useEffect} from 'react';
+import {useParams} from 'react-router-dom';
+import {Typography, Box, Paper, Divider, Card, CardContent, List, ListItem, ListItemText} from "@mui/material";
+import {getNewsDetailByNewsId} from "../../../api/news.js";
 import Chip from "@mui/material/Chip";
 import * as React from "react";
 
 export default function NewsDetail() {
     const [selectedButton, setSelectedButton] = useState('Intermediate');
-    const { id } = useParams();
+    const {id} = useParams();
     const [newsDetail, setNewsDetail] = useState(null);
 
     useEffect(() => {
@@ -49,18 +49,25 @@ export default function NewsDetail() {
                 backgroundColor: '#ffffff',
             }}>
                 <Stack spacing={2.5}>
-                    <Typography variant="h5" sx={{ fontWeight: 'bold', color: '#000', textAlign: 'center', paddingTop: '15px', lineHeight: '0.4' }}>
+                    <Typography variant="h5" sx={{
+                        fontWeight: 'bold',
+                        color: '#000',
+                        textAlign: 'center',
+                        paddingTop: '15px',
+                        lineHeight: '0.4'
+                    }}>
                         {newsDetail.title}
                     </Typography>
 
-                    <Typography variant="subtitle2" sx={{ color: '#666', textAlign: 'center', marginTop: '-8px' }}>
-                        Published on {new Date(newsDetail.published_date).toLocaleDateString() + ' ' + new Date(newsDetail.published_date).toLocaleTimeString('en-us')}
+                    <Typography variant="subtitle2" sx={{color: '#666', textAlign: 'center', marginTop: '-8px'}}>
+                        Published
+                        on {new Date(newsDetail.published_date).toLocaleDateString() + ' ' + new Date(newsDetail.published_date).toLocaleTimeString('en-us')}
                     </Typography>
 
-                    <Divider />
-                    <Card variant="outlined" sx={{ borderRadius: '12px', backgroundColor: '#f9fafb', padding: '16px' }}>
+                    <Divider/>
+                    <Card variant="outlined" sx={{borderRadius: '12px', backgroundColor: '#f9fafb', padding: '16px'}}>
                         <CardContent>
-                            <Typography variant="h6" sx={{ fontWeight: 'bold', color: '#000' }}>
+                            <Typography variant="h6" sx={{fontWeight: 'bold', color: '#000'}}>
                                 Summary
                             </Typography>
                             <Typography variant="body1">{newsDetail.summary}</Typography>
@@ -68,15 +75,15 @@ export default function NewsDetail() {
                     </Card>
 
                     {/* Key Metrics */}
-                    <Card variant="outlined" sx={{ borderRadius: '12px', backgroundColor: '#f9fafb', padding: '16px' }}>
+                    <Card variant="outlined" sx={{borderRadius: '12px', backgroundColor: '#f9fafb', padding: '16px'}}>
                         <CardContent>
-                            <Typography variant="h6" sx={{ fontWeight: 'bold', color: '#000' }}>
+                            <Typography variant="h6" sx={{fontWeight: 'bold', color: '#000'}}>
                                 Key Metrics
                             </Typography>
-                            <List sx={{ listStyleType: 'disc', paddingLeft: '20px', paddingBottom: '0px' }}>
+                            <List sx={{listStyleType: 'disc', paddingLeft: '20px', paddingBottom: '0px'}}>
                                 {newsDetail.key_metrics.map((metric, index) => (
-                                    <ListItem key={index} sx={{ display: 'list-item', paddingY: 0 }}>
-                                        <ListItemText sx={{ fontSize: '1rem' }} primary={metric} />
+                                    <ListItem key={index} sx={{display: 'list-item', paddingY: 0}}>
+                                        <ListItemText sx={{fontSize: '1rem'}} primary={metric}/>
                                     </ListItem>
                                 ))}
                             </List>
@@ -84,14 +91,15 @@ export default function NewsDetail() {
                     </Card>
 
                     {/* Sentiment Analysis */}
-                    <Card variant="outlined" sx={{ borderRadius: '12px', backgroundColor: '#f9fafb', padding: '16px' }}>
+                    <Card variant="outlined" sx={{borderRadius: '12px', backgroundColor: '#f9fafb', padding: '16px'}}>
                         <CardContent>
-                            <Typography variant="h6" sx={{ fontWeight: 'bold', color: '#000', marginBottom: '10px' }}>
+                            <Typography variant="h6" sx={{fontWeight: 'bold', color: '#000', marginBottom: '10px'}}>
                                 Sentiment Analysis
                             </Typography>
-                            <Typography variant="body1" sx={{ fontWeight: 'bold', marginBottom: "4px" }}>
+                            <Typography variant="body1" sx={{fontWeight: 'bold', marginBottom: "4px"}}>
                                 Overall Sentiment:
-                                <Chip label={newsDetail.sentiment} color={sentimentColor} sx={{ml: '4px', mb: '2px'}} size="small" />
+                                <Chip label={newsDetail.sentiment} color={sentimentColor} sx={{ml: '4px', mb: '2px'}}
+                                      size="small"/>
                                 {/*<span style={{ color: newsDetail.sentiment === 'Positive' ? 'green' : newsDetail.sentiment === 'Negative' ? 'red' : '#ff9800' }}>*/}
                                 {/*    {` ${newsDetail.sentiment}`}*/}
                                 {/*</span>*/}
@@ -101,9 +109,9 @@ export default function NewsDetail() {
                     </Card>
 
                     {/* Stock Impact Analysis */}
-                    <Card variant="outlined" sx={{ borderRadius: '12px', backgroundColor: '#f9fafb', padding: '16px' }}>
+                    <Card variant="outlined" sx={{borderRadius: '12px', backgroundColor: '#f9fafb', padding: '16px'}}>
                         <CardContent>
-                            <Typography variant="h6" sx={{ fontWeight: 'bold', color: '#000', marginBottom: '10px' }}>
+                            <Typography variant="h6" sx={{fontWeight: 'bold', color: '#000', marginBottom: '10px'}}>
                                 Stock Impact Analysis
                             </Typography>
                             <Typography variant="body1">
@@ -113,34 +121,34 @@ export default function NewsDetail() {
                             </Typography>
 
                             <Stack spacing={2} paddingTop={"20px"} direction="row" justifyContent="center">
-                        <Button
-                            variant={selectedButton === 'Beginner' ? 'contained' : 'outlined'}
-                            color="primary"
-                            size="large"
-                            sx={{ borderRadius: '24px', fontWeight: 'bold' }}
-                            onClick={() => handleButtonClick('Beginner')}
-                        >
-                            Beginner
-                        </Button>
-                        <Button
-                            variant={selectedButton === 'Intermediate' ? 'contained' : 'outlined'}
-                            color="primary"
-                            size="large"
-                            sx={{ borderRadius: '24px', fontWeight: 'bold' }}
-                            onClick={() => handleButtonClick('Intermediate')}
-                        >
-                            Intermediate
-                        </Button>
-                        <Button
-                            variant={selectedButton === 'Expert' ? 'contained' : 'outlined'}
-                            color="primary"
-                            size="large"
-                            sx={{ borderRadius: '24px', fontWeight: 'bold' }}
-                            onClick={() => handleButtonClick('Expert')}
-                        >
-                            Expert
-                        </Button>
-                    </Stack>
+                                <Button
+                                    variant={selectedButton === 'Beginner' ? 'contained' : 'outlined'}
+                                    color="primary"
+                                    size="large"
+                                    sx={{borderRadius: '24px', fontWeight: 'bold'}}
+                                    onClick={() => handleButtonClick('Beginner')}
+                                >
+                                    Beginner
+                                </Button>
+                                <Button
+                                    variant={selectedButton === 'Intermediate' ? 'contained' : 'outlined'}
+                                    color="primary"
+                                    size="large"
+                                    sx={{borderRadius: '24px', fontWeight: 'bold'}}
+                                    onClick={() => handleButtonClick('Intermediate')}
+                                >
+                                    Intermediate
+                                </Button>
+                                <Button
+                                    variant={selectedButton === 'Expert' ? 'contained' : 'outlined'}
+                                    color="primary"
+                                    size="large"
+                                    sx={{borderRadius: '24px', fontWeight: 'bold'}}
+                                    onClick={() => handleButtonClick('Expert')}
+                                >
+                                    Expert
+                                </Button>
+                            </Stack>
                         </CardContent>
                     </Card>
                 </Stack>

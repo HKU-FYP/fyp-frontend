@@ -25,3 +25,15 @@ export const getUserStock = () => {
       throw err;
     });
 };
+
+
+export const getUserStockId = () => {
+    return axios
+        .get(`${BASE_URL}/users/user-stock-ids`, {
+        headers: getAuthHeaders(),
+        })
+        .then((resp) => resp.data)
+        .catch((err) => {
+        throw err;
+        });
+}

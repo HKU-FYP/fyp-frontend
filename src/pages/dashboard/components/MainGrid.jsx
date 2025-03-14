@@ -6,7 +6,7 @@ import Typography from "@mui/material/Typography";
 import SessionsChart from "./SessionsChart";
 import StatCard from "./StatCard";
 import TradingVolume from "./TradingVolume";
-import {getUserStock} from "../../../api/user";
+import {getUserStock, getUserStockId} from "../../../api/user";
 import {getStockDetailInfo} from "../../../api/stock";
 import {useNavigate} from "react-router-dom";
 import StatCardNewsList from "./StatCardNewsList.jsx";
@@ -164,7 +164,10 @@ export default function MainGrid() {
             });
 
             // **Fetch news data**
-            const news = await getNewsByUserStockId(1); //TODO replace with user_stock_id
+            const response = await getUserStockId()
+            const user_stock_id = response.userStockId;
+
+            const news = await getNewsByUserStockId(user_stock_id); //TODO replace with user_stock_id
             setNewsData(news);
 
 

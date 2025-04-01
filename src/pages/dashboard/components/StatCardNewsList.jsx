@@ -23,9 +23,9 @@ function StatCardNewsList({id, source, title, analysis, link, sentiment, content
     return (
         <Card variant="outlined" sx={{height: "100%", flexGrow: 1, padding: "20px"}}>
             <CardContent>
-                <Typography component="h4" variant="subtitle1" gutterBottom>
-                    {source}
-                </Typography>
+                {/*<Typography component="h4" variant="subtitle1" gutterBottom>*/}
+                {/*    {source}*/}
+                {/*</Typography>*/}
 
                 <Stack
                     direction="column"
@@ -67,7 +67,7 @@ function StatCardNewsList({id, source, title, analysis, link, sentiment, content
 
 StatCardNewsList.propTypes = {
     id: PropTypes.number.isRequired,
-    source: PropTypes.string.isRequired,
+    // source: PropTypes.string.isRequired, // news source
     title: PropTypes.string.isRequired,
     percentChange: PropTypes.string,
     link: PropTypes.string

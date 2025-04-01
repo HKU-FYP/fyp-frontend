@@ -45,7 +45,7 @@ AreaGradient.propTypes = {
 };
 
 function StatCard({ title, value, analysis, percentChange, comment }) {
-  console.log("percentCHange", percentChange);
+  // console.log("percentCHange", percentChange);
   const theme = useTheme();
   const daysInWeek = getDaysInMonth(4, 2024);
 
@@ -149,7 +149,7 @@ StatCard.propTypes = {
   title: PropTypes.string.isRequired,
   // trend: PropTypes.oneOf(["down", "neutral", "up"]).isRequired,
   value: PropTypes.string.isRequired,
-  percentChange: PropTypes.string,
+  // percentChange: PropTypes.number,
 };
 
 export default StatCard;

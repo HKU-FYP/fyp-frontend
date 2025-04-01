@@ -3,7 +3,7 @@ import Stack from '@mui/material/Stack';
 import Button from "@mui/material/Button";
 import {useState, useEffect} from 'react';
 import {useParams} from 'react-router-dom';
-import {Typography, Box, Paper, Divider, Card, CardContent, List, ListItem, ListItemText} from "@mui/material";
+import {Typography, Box, Paper, Divider, Card, CardContent, List, ListItem, ListItemText, Alert, Snackbar} from "@mui/material";
 import {getNewsDetailByNewsId} from "../../../api/news.js";
 import Chip from "@mui/material/Chip";
 import * as React from "react";
@@ -12,6 +12,20 @@ export default function NewsDetail() {
     const [selectedButton, setSelectedButton] = useState('Intermediate');
     const {id} = useParams();
     const [newsDetail, setNewsDetail] = useState(null);
+
+    const [open, setOpen] = React.useState(false);
+
+    const handleClick = () => {
+        setOpen(true);
+    };
+
+    const handleClose = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+
+        setOpen(false);
+    };
 
     useEffect(() => {
         getNewsDetailByNewsId(id)
@@ -26,9 +40,15 @@ export default function NewsDetail() {
 
     if (!newsDetail) return null;
 
-    const sentimentColor = newsDetail?.sentiment === "Positive" ? "success"
-        : newsDetail?.sentiment === "Negative" ? "error"
-            : "warning";
+    const sentimentColorMap = {
+        "Highly Positive": { bg: "#1b5e20", text: "#ffffff" },
+        "Positive":        { bg: "#4caf50", text: "#ffffff" },
+        "Neutral":         { bg: "#e5cb74", text: "#000000" },
+        "Negative":        { bg: "#ff9800", text: "#000000" },
+        "Highly Negative": { bg: "#d32f2f", text: "#ffffff" },
+    };
+    const { bg, text } = sentimentColorMap[newsDetail.sentiment] || { bg: "#e0e0e0", text: "#000" };
+
 
 
     return (
@@ -98,11 +118,19 @@ export default function NewsDetail() {
                             </Typography>
                             <Typography variant="body1" sx={{fontWeight: 'bold', marginBottom: "4px"}}>
                                 Overall Sentiment:
-                                <Chip label={newsDetail.sentiment} color={sentimentColor} sx={{ml: '4px', mb: '2px'}}
-                                      size="small"/>
-                                {/*<span style={{ color: newsDetail.sentiment === 'Positive' ? 'green' : newsDetail.sentiment === 'Negative' ? 'red' : '#ff9800' }}>*/}
-                                {/*    {` ${newsDetail.sentiment}`}*/}
-                                {/*</span>*/}
+                                <Chip
+                                    label={
+                                        <span style={{color: text, fontWeight: 500}}>
+                                            {newsDetail.sentiment}
+                                        </span>
+                                    }
+                                    size="small"
+                                    sx={{
+                                        backgroundColor: bg,
+                                        ml: '4px',
+                                        mb: '2px'
+                                    }}
+                                />
                             </Typography>
                             <Typography variant="body1">{newsDetail.sentiment_analysis}</Typography>
                         </CardContent>
@@ -151,6 +179,35 @@ export default function NewsDetail() {
                             </Stack>
                         </CardContent>
                     </Card>
+                    <Divider />
+                    <Box sx={{ textAlign: 'center', marginTop: '24px' }}>
+                        <Typography variant="subtitle1" sx={{ fontWeight: 'bold', mb: 1 }}>
+                            Find it relevant to the stock?
+                        </Typography>
+                        <Stack direction="row" spacing={3} justifyContent="center">
+                            <Button variant="outlined" color="success" onClick={handleClick} startIcon={<span>👍</span>}>
+                                Yes
+                            </Button>
+                            <Button variant="outlined" color="error" onClick={handleClick} startIcon={<span>👎</span>}>
+                                No
+                            </Button>
+                            <Snackbar
+                                open={open}
+                                autoHideDuration={500}
+                                onClose={handleClose}
+                                anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+                            >
+                                <Alert
+                                    onClose={handleClose}
+                                    severity="success"
+                                    variant="filled"
+                                    sx={{width: '100%'}}
+                                >
+                                    Thanks for your feedback!
+                                </Alert>
+                            </Snackbar>
+                        </Stack>
+                    </Box>
                 </Stack>
             </Paper>
         </Box>

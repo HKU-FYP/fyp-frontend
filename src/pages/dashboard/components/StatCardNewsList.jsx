@@ -10,18 +10,37 @@ import Button from '@mui/material/Button';
 import Link from "@mui/material/Link";
 import Chip from "@mui/material/Chip";
 
-function StatCardNewsList({id, source, title, analysis, link, sentiment, content, published_date}) {
+function StatCardNewsList({id, source, title, analysis, link, sentiment, content, published_date, highlight}) {
     const theme = useTheme();
     const navigate = useNavigate();
     const formattedDate = new Date(published_date).toLocaleDateString('en-US');
+    // const highlight = sentiment === "Highly Positive" || sentiment === "Highly Negative";
 
-    const sentimentColor = sentiment === "Positive" ? "success"
-        : sentiment === "Negative" ? "error" : "warning";
+    const sentimentColorMap = {
+        "Highly Positive": { bg: "#1b5e20", text: "#ffffff" },
+        "Positive":        { bg: "#4caf50", text: "#ffffff" },
+        "Neutral":         { bg: "#e5cb74", text: "#000000" },
+        "Negative":        { bg: "#ff9800", text: "#000000" },
+        "Highly Negative": { bg: "#d32f2f", text: "#ffffff" },
+    };
+    const { bg, text } = sentimentColorMap[sentiment] || { bg: "#e0e0e0", text: "#000" };
 
     const trimmedSummary = content.length > 100 ? content.slice(0, 200) + "..." : content;
 
     return (
-        <Card variant="outlined" sx={{height: "100%", flexGrow: 1, padding: "20px"}}>
+        <Card variant="outlined"
+              sx={{
+                  height: "100%",
+                  flexGrow: 1,
+                  padding: "20px",
+                  backgroundColor: highlight
+                      ? (sentiment === "Highly Positive"
+                          ? "#e8f5e9"
+                          : sentiment === "Highly Negative"
+                              ? "#ffebee"
+                              : undefined)
+                      : undefined
+              }}>
             <CardContent>
                 {/*<Typography component="h4" variant="subtitle1" gutterBottom>*/}
                 {/*    {source}*/}
@@ -46,10 +65,19 @@ function StatCardNewsList({id, source, title, analysis, link, sentiment, content
                             <Typography variant="content" sx={{ color: "#666" }}>
                                 Published on {formattedDate}
                             </Typography>
-                            <Chip label={sentiment} color={sentimentColor} size="small" />
+                            <Chip
+                                label={
+                                    <span style={{ color: text, fontWeight: 500 }}>
+                                  {sentiment}
+                                </span>
+                                }
+                                size="small"
+                                sx={{
+                                    backgroundColor: bg,
+                                }}
+                            />
                         </Stack>
-
-                        {/* Summary (100자 이하) */}
+                        {/* Summary */}
                         <Typography variant="body2" sx={{ color: "#333", marginTop: "5px"}}>
                             {trimmedSummary}
                         </Typography>

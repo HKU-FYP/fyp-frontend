@@ -11,7 +11,7 @@ import {getStockDetailInfo} from "../../../api/stock";
 import {useNavigate} from "react-router-dom";
 import StatCardNewsList from "./StatCardNewsList.jsx";
 import { getNewsByUserStockId } from "../../../api/news";
-
+import Paper from "@mui/material/Paper";
 
 export const newsData = [
     {
@@ -105,7 +105,7 @@ export default function MainGrid() {
                 if (prev.some((item) => item.title === "Stock Price")) {
                     return prev;
                 }
-                console.log(stockDetailInfo.percent_change);
+                // console.log(stockDetailInfo.percent_change);
 
                 return [
                     ...prev,
@@ -167,7 +167,7 @@ export default function MainGrid() {
             const response = await getUserStockId()
             const user_stock_id = response.userStockId;
 
-            const news = await getNewsByUserStockId(user_stock_id); //TODO replace with user_stock_id
+            const news = await getNewsByUserStockId(user_stock_id);
             setNewsData(news);
 
 
@@ -223,10 +223,37 @@ export default function MainGrid() {
                 <Typography component="h2" variant="h6" sx={{mb: 2}}>
                     Personalized News Curation
                 </Typography>
+                {/*TODO quick summary at dashboard (1-2line aggregated information/summary of news to save user's time reading a list of newsData)   */}
+                <Paper elevation={1} sx={{ padding: 2, marginBottom: 2 }}>
+                    <Typography variant="subtitle1" sx={{ fontWeight: 'bold'}}> 🧠 Quick Summary </Typography>
+                    <Typography variant="body2">
+                        {(() => {
+                            const sentimentCounts = {};
+                            for (let item of newsData) {
+                                const sentiment = item.sentiment;
+                                if (sentimentCounts[sentiment]) {
+                                    sentimentCounts[sentiment]++;
+                                } else {
+                                    sentimentCounts[sentiment] = 1;
+                                }
+                            }
+                            const orderedSentiments = ["Highly Positive", "Positive", "Neutral", "Negative", "Highly Negative"];
+                            const summaryList = orderedSentiments
+                                .filter(sentiment => sentimentCounts[sentiment])
+                                .map(sentiment => `${sentiment}: ${sentimentCounts[sentiment]}`);
+
+                            return summaryList.join(" · ");
+                        })()}
+                    </Typography>
+                </Paper>
+
                 <Grid container spacing={2} columns={12}>
                     {newsData.map((card, index) => (
                         <Grid key={index} size={{xs: 12, sm: 12, lg: 12}}>
-                            <StatCardNewsList {...card} />
+                            <StatCardNewsList
+                                {...card}
+                                highlight = {card.sentiment === "Highly Positive" || card.sentiment === "Highly Negative"}
+                            />
                         </Grid>
                     ))}
                 </Grid>

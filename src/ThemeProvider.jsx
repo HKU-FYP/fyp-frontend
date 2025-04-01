@@ -12,7 +12,7 @@ function ThemeProvider({ children }) {
         palette: {
           mode: "light",
           primary: {
-            main: "#0b6e69",
+            main: "#1c4e06",
           },
         },
       }),

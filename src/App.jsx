@@ -4,13 +4,14 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import SignUp from "./pages/sign-up/SignUp";
 import StockInput from "./pages/stockinput/StockInput";
 import ThemeProvider from "./ThemeProvider";
-import { AppBar, Toolbar, Typography } from "@mui/material";
+import { AppBar, Toolbar, Typography, Box } from "@mui/material";
 import { GlobalProvider } from "./GlobalContext";
 import GlobalAlertManager from "./GlobalAlertManager";
 // import SignInSide from "./pages/sign-in-side/SignInSide.jsx";
 import SignInSide from "./pages/sign-in-side/SignInSide.tsx";
 import Dashboard from "./pages/dashboard/Dashboard.jsx";
 import NewsDetail from "./pages/dashboard/components/NewsDetail.jsx";
+
 
 function App() {
   return (
@@ -20,9 +21,9 @@ function App() {
           <GlobalAlertManager />
           <AppBar position="static">
             <Toolbar>
-              <Typography variant="h6" sx={{ flexGrow: 1 }}>
-                LLM-powered News Notification System
-              </Typography>
+              <Box sx={{ flexGrow: 1 }}>
+                <img src="/TradeInbox.png" alt="TradeInbox Logo" style={{height: 30 ,marginTop: '5px'}}/>
+              </Box>
             </Toolbar>
           </AppBar>
           <Routes>

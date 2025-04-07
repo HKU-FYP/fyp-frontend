@@ -35,63 +35,12 @@ export default function MainGrid() {
 
 
             const stockDetailInfo = await getStockDetailInfo(userStock.ticker);
-            setCardData((prev) => {
-                if (prev.some((item) => item.title === "Stock Price")) {
-                    return prev;
-                }
-                // console.log(stockDetailInfo.percent_change);
-
-                return [
-                    ...prev,
-                    {
-                        title: "Stock Price",
-                        value: `${stockDetailInfo.open.toFixed(2)} USD`,
-                        percentChange: stockDetailInfo.percent_change,
-                    },
-                ];
-            });
-
-            setCardData((prev) => {
-                if (prev.some((item) => item.title === "Exchange")) {
-                    return prev;
-                }
-
-                return [
-                    ...prev,
-                    {
-                        title: "Exchange",
-                        value: `${stockDetailInfo.exchange}`,
-                    },
-                ];
-            });
-
-            setCardData((prev) => {
-                if (prev.some((item) => item.title === "Previous Close")) {
-                    return prev;
-                }
-
-                return [
-                    ...prev,
-                    {
-                        title: "Previous Close",
-                        value: `${stockDetailInfo.previous_close.toFixed(2)} USD`,
-                    },
-                ];
-            });
-
-            setCardData((prev) => {
-                if (prev.some((item) => item.title === "Change")) {
-                    return prev;
-                }
-
-                return [
-                    ...prev,
-                    {
-                        title: "Change",
-                        value: `${stockDetailInfo.change.toFixed(2)} USD`,
-                    },
-                ];
-            });
+            setCardData([
+                { title: "Stock Price", value: `${stockDetailInfo.open.toFixed(2)} USD`, percentChange: stockDetailInfo.percent_change },
+                { title: "Exchange", value: `${stockDetailInfo.exchange}` },
+                { title: "Previous Close", value: `${stockDetailInfo.previous_close.toFixed(2)} USD` },
+                { title: "Change", value: `${stockDetailInfo.change.toFixed(2)} USD` },
+            ]);
 
             setStockHistory((prev) => {
                 return stockDetailInfo.stock_history;

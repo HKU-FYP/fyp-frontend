@@ -6,15 +6,13 @@ import Typography from "@mui/material/Typography";
 import SessionsChart from "./SessionsChart";
 import StatCard from "./StatCard";
 import TradingVolume from "./TradingVolume";
-import {getUserStock, getUserStockId} from "../../../api/user";
+import {getUserStock} from "../../../api/user";
 import {getStockDetailInfo} from "../../../api/stock";
 import {useNavigate} from "react-router-dom";
 import StatCardNewsList from "./StatCardNewsList.jsx";
 import { getNewsByUserStockId } from "../../../api/news";
 import Paper from "@mui/material/Paper";
-
 import { Select, MenuItem, FormControl, InputLabel } from "@mui/material";
-
 
 export default function MainGrid() {
     const [selectedStockGlobal, setSelectedStockGlobal] = useState({});
@@ -26,11 +24,21 @@ export default function MainGrid() {
 
     const navigate = useNavigate();
 
-    const fetchUserStockSync = async () => {
+    const fetchUserStocks = async () => {
         try {
-            const userStocks = await getUserStock(); 
-            const userStock = userStocks[0];
+            const userStocks = await getUserStock();
             setUserStocks(userStocks);
+            if (userStocks.length > 0) {
+                setSelectedStockId(userStocks[0].id);
+                handleStockChange(userStocks[0]);
+            }
+        } catch (error) {
+            console.error("Failed to fetch user stocks:", error);
+        }
+    };
+
+    const handleStockChange = async (userStock) => {
+        try {
             setSelectedStockGlobal({
                 id: userStock.id,
                 user_stock_id: userStock.user_stock_id,
@@ -47,25 +55,19 @@ export default function MainGrid() {
                 { title: "Change", value: `${stockDetailInfo.change.toFixed(2)} USD` },
             ]);
 
-            setStockHistory((prev) => {
-                return stockDetailInfo.stock_history;
-            });
-
-            // **Fetch news data**
-            // const response = await getUserStockId()
-            // const user_stock_id = response.userStockId;
-
+            setStockHistory(stockDetailInfo.stock_history);
+            // Fetch news data 
             const news = await getNewsByUserStockId(userStock.user_stock_id);
             setNewsData(news);
 
 
         } catch (error) {
-            console.error("Failed to fetch user stock:", error);
+            console.error("Failed to fetch stock details:", error);
         }
     };
 
     useEffect(() => {
-        fetchUserStockSync();
+        fetchUserStocks();
     }, []);
 
     return (
@@ -74,16 +76,31 @@ export default function MainGrid() {
             display: "flex", flexDirection: "row", gap: 2
         }}>
             <Box sx={{flex: 1.6}}>
-                {/* cards */}
-                <Typography component="h2" variant="h6" sx={{mb: 2}}>
-                    {selectedStockGlobal &&
-                    selectedStockGlobal.ticker &&
-                    selectedStockGlobal.name &&
-                    cardData.length > 0
-                        ? `${selectedStockGlobal.ticker} (${selectedStockGlobal.name})`
-                        : "Loading..."}
-                </Typography>
-
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+                    <Typography component="h2" variant="h6">
+                        {selectedStockGlobal.ticker && selectedStockGlobal.name
+                            ? `${selectedStockGlobal.ticker} (${selectedStockGlobal.name})`
+                            : "Loading..."}
+                    </Typography>
+                    <FormControl sx={{ minWidth: 200 }}>
+                        <InputLabel>Select Stock</InputLabel>
+                        <Select
+                            value={selectedStockId || ''}
+                            label="Select Stock"
+                            onChange={(e) => {
+                                const stock = userStocks.find(s => s.id === e.target.value);
+                                setSelectedStockId(e.target.value);
+                                handleStockChange(stock);
+                            }}
+                        >
+                            {userStocks.map((stock) => (
+                                <MenuItem key={stock.id} value={stock.id}>
+                                    {stock.ticker} ({stock.name})
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
+                </Box>
                 <Grid
                     container
                     spacing={2}
@@ -111,7 +128,6 @@ export default function MainGrid() {
                 <Typography component="h2" variant="h6" sx={{mb: 2}}>
                     Personalized News Curation
                 </Typography>
-                {/*TODO quick summary at dashboard (1-2line aggregated information/summary of news to save user's time reading a list of newsData)   */}
                 <Paper elevation={1} sx={{ padding: 2, marginBottom: 2 }}>
                     <Typography variant="subtitle1" sx={{ fontWeight: 'bold'}}> 🧠 Quick Summary </Typography>
                     <Typography variant="body2">

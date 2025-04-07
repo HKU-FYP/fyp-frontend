@@ -132,7 +132,7 @@ export default function MainGrid() {
             </Box>
 
             {/* Right-part */}
-            <Box sx={{flex: 1}}>
+            <Box sx={{flex: 1, overflow: 'auto', height: '90vh'}}>
                 <Typography component="h2" variant="h6" sx={{mb: 2}}>
                     Personalized News Curation
                 </Typography>

@@ -13,22 +13,27 @@ import StatCardNewsList from "./StatCardNewsList.jsx";
 import { getNewsByUserStockId } from "../../../api/news";
 import Paper from "@mui/material/Paper";
 
+import { Select, MenuItem, FormControl, InputLabel } from "@mui/material";
 
 
 export default function MainGrid() {
     const [selectedStockGlobal, setSelectedStockGlobal] = useState({});
     const [cardData, setCardData] = useState([]);
     const [stockHistory, setStockHistory] = useState([]);
-    const [newsData, setNewsData] = useState([]); // Add state for news data
+    const [newsData, setNewsData] = useState([]); 
+    const [userStocks, setUserStocks] = useState([]);
+    const [selectedStockId, setSelectedStockId] = useState(null);
 
     const navigate = useNavigate();
 
     const fetchUserStockSync = async () => {
         try {
-            const userStocks = await getUserStock(); // Pauses until the Promise resolves
+            const userStocks = await getUserStock(); 
             const userStock = userStocks[0];
+            setUserStocks(userStocks);
             setSelectedStockGlobal({
                 id: userStock.id,
+                user_stock_id: userStock.user_stock_id,
                 ticker: userStock.ticker,
                 name: userStock.name,
             });
@@ -47,10 +52,10 @@ export default function MainGrid() {
             });
 
             // **Fetch news data**
-            const response = await getUserStockId()
-            const user_stock_id = response.userStockId;
+            // const response = await getUserStockId()
+            // const user_stock_id = response.userStockId;
 
-            const news = await getNewsByUserStockId(user_stock_id);
+            const news = await getNewsByUserStockId(userStock.user_stock_id);
             setNewsData(news);
 
 

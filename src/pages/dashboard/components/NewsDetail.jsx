@@ -74,7 +74,7 @@ export default function NewsDetail() {
                         color: '#000',
                         textAlign: 'center',
                         paddingTop: '15px',
-                        lineHeight: '0.4'
+                        lineHeight: '1.2'
                     }}>
                         {newsDetail.title}
                     </Typography>
@@ -116,8 +116,10 @@ export default function NewsDetail() {
                             <Typography variant="h6" sx={{fontWeight: 'bold', color: '#000', marginBottom: '10px'}}>
                                 Sentiment Analysis
                             </Typography>
-                            <Typography variant="body1" sx={{fontWeight: 'bold', marginBottom: "4px"}}>
-                                Overall Sentiment:
+                            <Box sx={{ display: 'flex', alignItems: 'center', marginBottom: '4px' }}>
+                                <Typography variant="body1" sx={{ fontWeight: 'bold', marginRight: 1 }}>
+                                    Overall Sentiment:
+                                </Typography>
                                 <Chip
                                     label={
                                         <span style={{color: text, fontWeight: 500}}>
@@ -127,11 +129,9 @@ export default function NewsDetail() {
                                     size="small"
                                     sx={{
                                         backgroundColor: bg,
-                                        ml: '4px',
-                                        mb: '2px'
                                     }}
                                 />
-                            </Typography>
+                            </Box>
                             <Typography variant="body1">{newsDetail.sentiment_analysis}</Typography>
                         </CardContent>
                     </Card>

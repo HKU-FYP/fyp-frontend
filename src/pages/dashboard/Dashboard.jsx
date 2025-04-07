@@ -30,7 +30,7 @@ export default function Dashboard(props) {
       <CssBaseline enableColorScheme />
       <Box sx={{ display: "flex" }}>
         {/* <SideMenu /> */}
-        <AppNavbar />
+        {/* <AppNavbar /> */}
         {/* Main content */}
         <Box
           component="main"
@@ -49,11 +49,11 @@ export default function Dashboard(props) {
               mx: 3,
               pb: 5,
               mt: { xs: 8, md: 0 },
+              mt: 3
             }}
           >
-            <Header />
+            {/* <Header /> */}
             <MainGrid />
-            <Copyright sx={{ my: 4 }} />
           </Stack>
         </Box>
       </Box>

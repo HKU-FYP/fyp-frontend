@@ -39,6 +39,7 @@ export default function MainGrid() {
 
     const handleStockChange = async (userStock) => {
         try {
+            // Update the selected stock 
             setSelectedStockGlobal({
                 id: userStock.id,
                 user_stock_id: userStock.user_stock_id,
@@ -46,7 +47,7 @@ export default function MainGrid() {
                 name: userStock.name,
             });
 
-
+            // Set the left-part card data 
             const stockDetailInfo = await getStockDetailInfo(userStock.ticker);
             setCardData([
                 { title: "Stock Price", value: `${stockDetailInfo.open.toFixed(2)} USD`, percentChange: stockDetailInfo.percent_change },
@@ -54,12 +55,12 @@ export default function MainGrid() {
                 { title: "Previous Close", value: `${stockDetailInfo.previous_close.toFixed(2)} USD` },
                 { title: "Change", value: `${stockDetailInfo.change.toFixed(2)} USD` },
             ]);
-
+            // Set the left-part chart data 
             setStockHistory(stockDetailInfo.stock_history);
-            // Fetch news data 
+            
+            // Set the right news data 
             const news = await getNewsByUserStockId(userStock.user_stock_id);
             setNewsData(news);
-
 
         } catch (error) {
             console.error("Failed to fetch stock details:", error);
@@ -75,6 +76,7 @@ export default function MainGrid() {
             width: "100%", maxWidth: {sm: "100%", md: "1700px"},
             display: "flex", flexDirection: "row", gap: 2
         }}>
+            {/* Left-part */}
             <Box sx={{flex: 1.6}}>
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
                     <Typography component="h2" variant="h6">
@@ -82,6 +84,8 @@ export default function MainGrid() {
                             ? `${selectedStockGlobal.ticker} (${selectedStockGlobal.name})`
                             : "Loading..."}
                     </Typography>
+
+                    {/* Stock Selector */}
                     <FormControl sx={{ minWidth: 200 }}>
                         <InputLabel>Select Stock</InputLabel>
                         <Select
@@ -101,6 +105,8 @@ export default function MainGrid() {
                         </Select>
                     </FormControl>
                 </Box>
+
+                {/* Stock Info Card & Charts */}
                 <Grid
                     container
                     spacing={2}
@@ -124,10 +130,14 @@ export default function MainGrid() {
                     </Grid>
                 </Grid>
             </Box>
+
+            {/* Right-part */}
             <Box sx={{flex: 1}}>
                 <Typography component="h2" variant="h6" sx={{mb: 2}}>
                     Personalized News Curation
                 </Typography>
+
+                {/* Quick Summary */}
                 <Paper elevation={1} sx={{ padding: 2, marginBottom: 2 }}>
                     <Typography variant="subtitle1" sx={{ fontWeight: 'bold'}}> 🧠 Quick Summary </Typography>
                     <Typography variant="body2">
@@ -151,6 +161,7 @@ export default function MainGrid() {
                     </Typography>
                 </Paper>
 
+                {/* News List */}
                 <Grid container spacing={2} columns={12}>
                     {newsData.map((card, index) => (
                         <Grid key={index} size={{xs: 12, sm: 12, lg: 12}}>

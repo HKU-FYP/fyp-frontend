@@ -82,7 +82,7 @@ export default function MainGrid() {
             display: "flex", flexDirection: "row", gap: 2
         }}>
             {/* Left-part */}
-            <Box sx={{flex: 1.6}}>
+            <Box sx={{flex: 1.2}}>
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
                     <Typography component="h2" variant="h6">
                         {selectedStockGlobal.ticker && selectedStockGlobal.name
@@ -123,16 +123,16 @@ export default function MainGrid() {
                             <StatCard {...card} />
                         </Grid>
                     ))}
-                    <Grid size={{xs: 12, md: 6}}>
+                </Grid>
+                <Grid size={{xs: 10, md: 6}} sx={{ mt: 2, mb: 2 }}>
                         {stockHistory.length > 0 && (
                             <SessionsChart stock_history={stockHistory}/>
                         )}
-                    </Grid>
-                    <Grid size={{xs: 12, md: 6}}>
-                        {stockHistory.length > 0 && (
-                            <TradingVolume stock_history={stockHistory}/>
-                        )}
-                    </Grid>
+                </Grid>                
+                <Grid size={{xs: 10, md: 6}}>
+                    {stockHistory.length > 0 && (
+                        <TradingVolume stock_history={stockHistory}/>
+                    )}
                 </Grid>
             </Box>
 

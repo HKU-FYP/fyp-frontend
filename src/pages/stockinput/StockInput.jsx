@@ -1,5 +1,5 @@
 import { useEffect, useState, useContext } from "react";
-import { Autocomplete, TextField, Button, Box } from "@mui/material";
+import { Autocomplete, TextField, Button, Box, Chip } from "@mui/material";
 import axios from "axios";
 import { GlobalContext } from "../../GlobalContext";
 import { getAuthHeaders } from "../../util/authUtils";
@@ -61,10 +61,8 @@ const SignUpContainer = styled(Stack)(({ theme }) => ({
 
 function StockInput() {
   const [stocks, setStocks] = useState([]);
-  const [selectedStockLocal, setSelectedStockLocal] = useState(null);
-  const { selectedStockGlobal, setSelectedStockGlobal } =
-    useContext(GlobalContext);
-
+  const [selectedStocksLocal, setSelectedStocksLocal] = useState([]);
+  const { selectedStockGlobal, setSelectedStockGlobal } = useContext(GlobalContext);
   const showAlert = useGlobalAlert();
   const navigate = useNavigate();
 
@@ -85,8 +83,8 @@ function StockInput() {
   // Handle submit button click
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!selectedStockLocal) {
-      alert("Please select a stock.");
+    if (selectedStocksLocal.length === 0) {
+      showAlert("Please select at least one stock", "error");
       return;
     }
 
@@ -94,15 +92,15 @@ function StockInput() {
       .post(
         `http://localhost:8888/api/v1/users/stock`,
         {
-          stock_info_id: selectedStockLocal.id,
+          stock_info_id: selectedStocksLocal.map(stock => stock.id),
         },
         {
           headers: getAuthHeaders(),
         }
       )
       .then((response) => {
-        showAlert("Stock saved successfully!", "success");
-        setSelectedStockGlobal(selectedStockLocal);
+        showAlert("Stocks saved successfully!", "success");
+        setSelectedStockGlobal(selectedStocksLocal[0]);
         setTimeout(() => navigate("/dashboard"), 1000);
       })
       .catch((error) => {
@@ -110,54 +108,75 @@ function StockInput() {
       });
   };
 
+  const handleStockRemove = (stockToRemove) => {
+    setSelectedStocksLocal(selectedStocksLocal.filter((stock) => stock.id !== stockToRemove.id));
+  };
+
   return (
     <AppTheme>
       <CssBaseline enableColorScheme />
       <ColorModeSelect sx={{ position: "fixed", top: "1rem", right: "1rem" }} />
-      <SignUpContainer direction="column" justifyContent="space-between">
-        <Card variant="outlined">
-          <Typography
-            component="h1"
-            variant="h4"
-            sx={{
-              width: "100%",
-              maxWidth: "800px",
-              fontSize: "clamp(2rem, 10vw, 2.15rem)",
-            }}
-          >
-            Enter stock you wish to track!
+      <SignUpContainer>
+        <Card>
+          <Typography variant="h2" gutterBottom>
+            Enter stocks you wish to track!
           </Typography>
+          
           <Box
             component="form"
-            // onSubmit={handleSubmit}
+            onSubmit={handleSubmit}
             sx={{ display: "flex", flexDirection: "column", gap: 2 }}
           >
             <Autocomplete
-              options={stocks}
-              getOptionLabel={(option) => `${option.ticker} (${option.name})`}
-              onChange={(event, value) => setSelectedStockLocal(value)}
-              renderOption={(props, option) => (
-                <li {...props} key={option.id}>
-                  {option.ticker} ({option.name})
-                </li>
+              options={stocks.filter(
+                (stock) => !selectedStocksLocal.some((selected) => selected.id === stock.id)
               )}
+              getOptionLabel={(option) => `${option.ticker} (${option.name})`}
+              onChange={(_, stock) => {
+                if (stock) {
+                  setSelectedStocksLocal([...selectedStocksLocal, stock]);
+                }
+              }}
               renderInput={(params) => (
                 <TextField
                   {...params}
-                  label="Select Stock Ticker"
+                  label="Select Stock Tickers"
                   variant="outlined"
+                  placeholder="Type to search..."
                 />
               )}
-              filterSelectedOptions
-              isOptionEqualToValue={(option, value) =>
-                option.ticker === value.ticker
-              }
+              value={null}
+              clearOnBlur
+              blurOnSelect
             />
+
+            {selectedStocksLocal.length > 0 && (
+              <Box sx={{ mt: 2, mb: 2 }}>
+                <Typography variant="subtitle1" gutterBottom>
+                  Selected Stocks:
+                </Typography>
+                <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
+                  {selectedStocksLocal.map((stock) => (
+                    <Chip
+                      size="medium"
+                      sx={{
+                        backgroundColor: '#1c4e06',
+                      }}
+                      key={stock.id}
+                      label={`${stock.ticker} (${stock.name})`}
+                      onDelete={() => handleStockRemove(stock)}
+                      color="primary"
+                    />
+                  ))}
+                </Box>
+              </Box>
+            )}
+
             <Button
               type="submit"
               fullWidth
               variant="contained"
-              onClick={(e) => handleSubmit(e)}
+              disabled={selectedStocksLocal.length === 0}
             >
               Confirm
             </Button>

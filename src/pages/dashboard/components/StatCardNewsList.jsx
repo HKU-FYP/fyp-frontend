@@ -10,10 +10,10 @@ import Button from '@mui/material/Button';
 import Link from "@mui/material/Link";
 import Chip from "@mui/material/Chip";
 
-function StatCardNewsList({id, source, title, analysis, link, sentiment, content, published_date, highlight}) {
+function StatCardNewsList({id, title, link, sentiment, published_date, highlight, one_sentence_summary}) {
     const theme = useTheme();
     const navigate = useNavigate();
-    const formattedDate = new Date(published_date).toLocaleDateString('en-US');
+    const formattedDate = new Date(published_date).toLocaleString('en-US');
     // const highlight = sentiment === "Highly Positive" || sentiment === "Highly Negative";
 
     const sentimentColorMap = {
@@ -25,7 +25,6 @@ function StatCardNewsList({id, source, title, analysis, link, sentiment, content
     };
     const { bg, text } = sentimentColorMap[sentiment] || { bg: "#e0e0e0", text: "#000" };
 
-    const trimmedSummary = content.length > 100 ? content.slice(0, 200) + "..." : content;
 
     return (
         <Card variant="outlined"
@@ -42,10 +41,6 @@ function StatCardNewsList({id, source, title, analysis, link, sentiment, content
                       : undefined
               }}>
             <CardContent>
-                {/*<Typography component="h4" variant="subtitle1" gutterBottom>*/}
-                {/*    {source}*/}
-                {/*</Typography>*/}
-
                 <Stack
                     direction="column"
                     sx={{justifyContent: "space-between", flexGrow: "1", gap: 1}}
@@ -55,14 +50,14 @@ function StatCardNewsList({id, source, title, analysis, link, sentiment, content
                             direction="row"
                             sx={{justifyContent: "space-between", alignItems: "center"}}
                         >
-                            <Typography variant="h5" component="p">
+                            <Typography variant="h6" component="p">
                                 {title}
                             </Typography>
                         </Stack>
 
                         {/* date + Sentiment  */}
                         <Stack direction="row" justifyContent="space-between" spacing={0} sx={{ marginTop: "5px", marginBottom: "0px" }}>
-                            <Typography variant="content" sx={{ color: "#666" }}>
+                            <Typography variant="caption" sx={{ color: "#666" }}>
                                 Published on {formattedDate}
                             </Typography>
                             <Chip
@@ -78,12 +73,12 @@ function StatCardNewsList({id, source, title, analysis, link, sentiment, content
                             />
                         </Stack>
                         {/* Summary */}
-                        <Typography variant="body2" sx={{ color: "#333", marginTop: "5px"}}>
-                            {trimmedSummary}
+                        <Typography variant="subtitle2" sx={{ color: "#333", marginTop: "5px"}}>
+                            {one_sentence_summary}
                         </Typography>
                     </Stack>
 
-                    <Stack direction="row" justifyContent="space-between" alignItems="center">
+                    <Stack direction="row" justifyContent="space-between" alignItems="center" marginTop="-5px" marginBottom="-5px">
                         <Link href={link}>Link to original news</Link>
                         <Button variant="outlined" onClick={() => navigate(`/dashboard/news/${id}`)}>See Details</Button>
                     </Stack>
@@ -95,10 +90,12 @@ function StatCardNewsList({id, source, title, analysis, link, sentiment, content
 
 StatCardNewsList.propTypes = {
     id: PropTypes.number.isRequired,
-    // source: PropTypes.string.isRequired, // news source
     title: PropTypes.string.isRequired,
-    percentChange: PropTypes.string,
-    link: PropTypes.string
+    link: PropTypes.string.isRequired,
+    sentiment: PropTypes.string.isRequired,
+    published_date: PropTypes.string.isRequired,
+    highlight: PropTypes.bool,
+    one_sentence_summary: PropTypes.string.isRequired
 };
 
 export default StatCardNewsList;

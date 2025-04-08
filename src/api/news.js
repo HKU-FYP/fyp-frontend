@@ -24,3 +24,14 @@ export const getNewsDetailByNewsId = (news_id) => {
             throw err;
         });
 }
+
+export const getNewsDashboardSummary = (user_stock_id) => {
+    return axios
+        .get(`${BASE_URL}/user_stocks/${user_stock_id}/news-dashboard-summary`, {
+            headers: getAuthHeaders(),
+        })
+        .then((resp) => resp.data)
+        .catch((err) => {
+            throw err;
+        });
+}

@@ -10,7 +10,7 @@ import {getUserStock} from "../../../api/user";
 import {getStockDetailInfo} from "../../../api/stock";
 import {useNavigate} from "react-router-dom";
 import StatCardNewsList from "./StatCardNewsList.jsx";
-import { getNewsByUserStockId } from "../../../api/news";
+import { getNewsByUserStockId, getNewsDashboardSummary } from "../../../api/news";
 import Paper from "@mui/material/Paper";
 import { Select, MenuItem, FormControl, InputLabel } from "@mui/material";
 
@@ -21,6 +21,7 @@ export default function MainGrid() {
     const [newsData, setNewsData] = useState([]); 
     const [userStocks, setUserStocks] = useState([]);
     const [selectedStockId, setSelectedStockId] = useState(null);
+    const [newsSummary, setNewsSummary] = useState({ positive_summary_list: [], negative_summary_list: [] });
 
     const navigate = useNavigate();
 
@@ -61,6 +62,10 @@ export default function MainGrid() {
             // Set the right news data 
             const news = await getNewsByUserStockId(userStock.user_stock_id);
             setNewsData(news);
+
+            // Fetch news summary
+            const summary = await getNewsDashboardSummary(userStock.user_stock_id);
+            setNewsSummary(summary);
 
         } catch (error) {
             console.error("Failed to fetch stock details:", error);
@@ -140,7 +145,9 @@ export default function MainGrid() {
                 {/* Quick Summary */}
                 <Paper elevation={1} sx={{ padding: 2, marginBottom: 2 }}>
                     <Typography variant="subtitle1" sx={{ fontWeight: 'bold'}}> 🧠 Quick Summary </Typography>
-                    <Typography variant="body2">
+                    
+                    {/* Sentiment Counts */}
+                    <Typography variant="body2" sx={{ mb: 2 }}>
                         {(() => {
                             const sentimentCounts = {};
                             for (let item of newsData) {
@@ -159,6 +166,35 @@ export default function MainGrid() {
                             return summaryList.join(" · ");
                         })()}
                     </Typography>
+
+                    {/* 3 Key News Summaries */}
+                    {newsSummary.positive_summary_list.length > 0 && (
+                        <Box sx={{ mt: 1 }}>
+                            <Typography variant="subtitle2" color="success.main">Key Positive News</Typography>
+                            <ul style={{ margin: 0, paddingLeft: 20 }}>
+                                {newsSummary.positive_summary_list.map((summary, index) => (
+                                    <li key={index}>
+                                        <Typography variant="body2">{summary}</Typography>
+                                    </li>
+                                ))}
+                            </ul>
+                        </Box>
+                    )}
+                    {newsSummary.negative_summary_list.length > 0 && (
+                        <Box sx={{ mt: 1 }}>
+                            <Typography variant="subtitle2" color="error.main">Key Negative News</Typography>
+                            <ul style={{ margin: 0, paddingLeft: 20 }}>
+                                {newsSummary.negative_summary_list.map((summary, index) => (
+                                    <li key={index}>
+                                        <Typography variant="body2">{summary}</Typography>
+                                    </li>
+                                ))}
+                            </ul>
+                        </Box>
+                    )}
+                    {newsSummary.positive_summary_list.length === 0 && newsSummary.negative_summary_list.length === 0 && (
+                        <Typography variant="body2" sx={{ mt: 1 }}>No news summary available</Typography>
+                    )}
                 </Paper>
 
                 {/* News List */}

@@ -57,7 +57,7 @@ export default function SignInSide(props: { disableCustomTheme?: boolean }) {
               m: 'auto',
             }}
           >
-            <Content />
+            {/* <Content /> */}
             <SignInCard />
           </Stack>
         </Stack>

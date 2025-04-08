@@ -89,7 +89,7 @@ export default function SignInCard() {
 
   return (
     <Card variant="outlined">
-      <Box
+      {/* <Box
         // sx={{ display: { xs: "flex", md: "none" } }}
         sx={{
           display: { xs: "flex", md: "none" },
@@ -99,9 +99,9 @@ export default function SignInCard() {
           backgroundColor: "background.default", // Ensure background matches theme
           padding: 2,
         }}
-      >
-        <SitemarkIcon />
-      </Box>
+      > */}
+        {/* <SitemarkIcon /> */}
+      {/* </Box> */}
       <Typography
         component="h1"
         variant="h4"

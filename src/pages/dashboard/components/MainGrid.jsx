@@ -82,7 +82,7 @@ export default function MainGrid() {
             display: "flex", flexDirection: "row", gap: 2
         }}>
             {/* Left-part */}
-            <Box sx={{flex: 1.2}}>
+            <Box sx={{flex: 1.3}}>
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
                     <Typography component="h2" variant="h6">
                         {selectedStockGlobal.ticker && selectedStockGlobal.name

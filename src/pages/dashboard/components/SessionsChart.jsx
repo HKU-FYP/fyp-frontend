@@ -86,7 +86,7 @@ function SessionsChart({ stock_history }) {
               data: yAxisData.reverse(), // Reverse to align with x-axis
             },
           ]}
-          height={250}
+          height={420}
           margin={{ left: 50, right: 20, top: 20, bottom: 20 }}
           grid={{ horizontal: true }}
           sx={{

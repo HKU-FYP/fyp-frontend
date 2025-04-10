@@ -51,10 +51,11 @@ export default function MainGrid() {
             // Set the left-part card data 
             const stockDetailInfo = await getStockDetailInfo(userStock.ticker);
             setCardData([
-                { title: "Stock Price", value: `${stockDetailInfo.open.toFixed(2)} USD`, percentChange: stockDetailInfo.percent_change },
                 { title: "Exchange", value: `${stockDetailInfo.exchange}` },
+                { title: "Sector", value: "Technology" },
+                { title: "Stock Price", value: `${stockDetailInfo.open.toFixed(2)} USD`, percentChange: stockDetailInfo.percent_change },
                 { title: "Previous Close", value: `${stockDetailInfo.previous_close.toFixed(2)} USD` },
-                { title: "Change", value: `${stockDetailInfo.change.toFixed(2)} USD` },
+                
             ]);
             // Set the left-part chart data 
             setStockHistory(stockDetailInfo.stock_history);
@@ -65,7 +66,12 @@ export default function MainGrid() {
 
             // Fetch news summary
             const summary = await getNewsDashboardSummary(userStock.user_stock_id);
-            setNewsSummary(summary);
+            const firstSummary = {
+                positive_summary_list: summary.positive_summary_list.slice(0, 1),
+                negative_summary_list: summary.negative_summary_list.slice(0, 1)
+            };
+            setNewsSummary(firstSummary);
+            // setNewsSummary(summary);
 
         } catch (error) {
             console.error("Failed to fetch stock details:", error);
@@ -147,7 +153,7 @@ export default function MainGrid() {
                     <Typography variant="subtitle1" sx={{ fontWeight: 'bold'}}> 🧠 Quick Summary </Typography>
                     
                     {/* Sentiment Counts */}
-                    <Typography variant="body2" sx={{ mb: 2 }}>
+                    {/* <Typography variant="body2" sx={{ mb: 2 }}>
                         {(() => {
                             const sentimentCounts = {};
                             for (let item of newsData) {
@@ -158,14 +164,14 @@ export default function MainGrid() {
                                     sentimentCounts[sentiment] = 1;
                                 }
                             }
-                            const orderedSentiments = ["Highly Positive", "Positive", "Neutral", "Negative", "Highly Negative"];
+                            const orderedSentiments = ["Strong_Positive", "Positive", "Neutral", "Negative", "Strong_Negative"];
                             const summaryList = orderedSentiments
                                 .filter(sentiment => sentimentCounts[sentiment])
                                 .map(sentiment => `${sentiment}: ${sentimentCounts[sentiment]}`);
 
                             return summaryList.join(" · ");
                         })()}
-                    </Typography>
+                    </Typography> */}
 
                     {/* 3 Key News Summaries */}
                     {newsSummary.positive_summary_list.length > 0 && (
@@ -204,7 +210,7 @@ export default function MainGrid() {
                             <StatCardNewsList
                                 {...card}
                                 user_stock_id={selectedStockGlobal.user_stock_id}
-                                highlight = {card.sentiment === "Highly Positive" || card.sentiment === "Highly Negative"}
+                                highlight = {card.sentiment === "Strong_Positive" || card.sentiment === "Strong_Negative"}
                             />
                         </Grid>
                     ))}

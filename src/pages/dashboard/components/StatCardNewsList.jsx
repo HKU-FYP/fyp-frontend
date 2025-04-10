@@ -14,14 +14,13 @@ function StatCardNewsList({id, title, link, sentiment, published_date, highlight
     const theme = useTheme();
     const navigate = useNavigate();
     const formattedDate = new Date(published_date).toLocaleString('en-US');
-    // const highlight = sentiment === "Highly Positive" || sentiment === "Highly Negative";
 
     const sentimentColorMap = {
-        "Highly Positive": { bg: "#1b5e20", text: "#ffffff" },
+        "Strong_Positive": { bg: "#1b5e20", text: "#ffffff" },
         "Positive":        { bg: "#4caf50", text: "#ffffff" },
         "Neutral":         { bg: "#e5cb74", text: "#000000" },
         "Negative":        { bg: "#ff9800", text: "#000000" },
-        "Highly Negative": { bg: "#d32f2f", text: "#ffffff" },
+        "Strong_Negative": { bg: "#d32f2f", text: "#ffffff" },
     };
     const { bg, text } = sentimentColorMap[sentiment] || { bg: "#e0e0e0", text: "#000" };
 
@@ -32,13 +31,11 @@ function StatCardNewsList({id, title, link, sentiment, published_date, highlight
                   height: "100%",
                   flexGrow: 1,
                   padding: "20px",
-                  backgroundColor: highlight
-                      ? (sentiment === "Highly Positive"
-                          ? "#e8f5e9"
-                          : sentiment === "Highly Negative"
-                              ? "#ffebee"
-                              : undefined)
-                      : undefined
+                  backgroundColor: sentiment === "Strong_Positive"
+                      ? "#e8f5e9"
+                      : sentiment === "Strong_Negative"
+                          ? "#ffebee"
+                          : undefined
               }}>
             <CardContent>
                 <Stack

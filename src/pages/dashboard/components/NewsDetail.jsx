@@ -72,7 +72,12 @@ export default function NewsDetail() {
             setNewsData(allNews);
             
             const summary = await getNewsDashboardSummary(user_stock_id);
-            setNewsSummary(summary);
+            const firstSummary = {
+                positive_summary_list: summary.positive_summary_list.slice(0, 1),
+                negative_summary_list: summary.negative_summary_list.slice(0, 1)
+            };
+            setNewsSummary(firstSummary);
+            // setNewsSummary(summary);
         };
 
         if (user_stock_id) {
@@ -87,11 +92,11 @@ export default function NewsDetail() {
     if (!newsDetail) return null;
 
     const sentimentColorMap = {
-        "Highly Positive": { bg: "#1b5e20", text: "#ffffff" },
+        "Strong_Positive": { bg: "#1b5e20", text: "#ffffff" },
         "Positive":        { bg: "#4caf50", text: "#ffffff" },
         "Neutral":         { bg: "#e5cb74", text: "#000000" },
         "Negative":        { bg: "#ff9800", text: "#000000" },
-        "Highly Negative": { bg: "#d32f2f", text: "#ffffff" },
+        "Strong_Negative": { bg: "#d32f2f", text: "#ffffff" },
     };
     const { bg, text } = sentimentColorMap[newsDetail.sentiment] || { bg: "#e0e0e0", text: "#000" };
 
@@ -138,7 +143,7 @@ export default function NewsDetail() {
                                 <Paper elevation={1} sx={{ padding: 2, marginBottom: 2 }}>
                                     <Typography variant="subtitle1" sx={{ fontWeight: 'bold'}}> 🧠 Quick Summary </Typography>
                                     
-                                    <Typography variant="body2" sx={{ mb: 2 }}>
+                                    {/* <Typography variant="body2" sx={{ mb: 2 }}>
                                         {(() => {
                                             const sentimentCounts = {};
                                             for (let item of newsData) {
@@ -156,7 +161,7 @@ export default function NewsDetail() {
 
                                             return summaryList.join(" · ");
                                         })()}
-                                    </Typography>
+                                    </Typography> */}
 
                                     {newsSummary.positive_summary_list.length > 0 && (
                                         <Box sx={{ mt: 1 }}>
@@ -193,22 +198,23 @@ export default function NewsDetail() {
                                             <StatCardNewsList
                                                 {...news}
                                                 user_stock_id={parseInt(user_stock_id)}
-                                                highlight={news.sentiment === "Highly Positive" || news.sentiment === "Highly Negative"}
+                                                highlight={news.sentiment === "Strong_Positive" || news.sentiment === "Strong_Negative"}
                                             />
                                         </Grid>
                                     ))}
                                 </Grid>
                             </Box>
 
-                              {/* Left part - News Detail */}
-                              <Box sx={{flex:1.3}}>
+                              {/* Right part - News Detail */}
+                              <Box sx={{flex: 1.3, overflow: 'auto', height: '90vh'}}>
                                 <Paper elevation={6} sx={{
                                     maxWidth: '900px',
                                     width: '100%',
                                     borderRadius: '16px',
-                                    overflow: 'hidden',
+                                    overflow: 'auto',
                                     padding: '30px',
                                     backgroundColor: '#ffffff',
+                                    height: '100%'
                                 }}>
                                     <Stack spacing={2.5}>
                                         <Typography variant="h5" sx={{

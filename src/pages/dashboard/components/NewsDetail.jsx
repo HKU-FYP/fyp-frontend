@@ -11,6 +11,7 @@ import StatCardNewsList from "./StatCardNewsList.jsx";
 import AppTheme from "../../shared-theme/AppTheme"
 import CssBaseline from "@mui/material/CssBaseline";
 import { alpha } from "@mui/material/styles";
+import { dislikeNews } from "../../../api/news";
 import {
   chartsCustomizations,
   dataGridCustomizations,
@@ -36,6 +37,16 @@ export default function NewsDetail() {
 
     const handleClick = () => {
         setOpen(true);
+    };
+
+    const handleDislike = async () => {
+        try {
+            await dislikeNews(newsDetail.id);
+            setOpen(true);
+        } catch (error) {
+            // 에러 처리 (예: 에러 메시지를 보여주기)
+            console.error("Failed to dislike news:", error);
+        }
     };
 
     const handleClose = (event, reason) => {
@@ -246,7 +257,7 @@ export default function NewsDetail() {
                                                 <Button variant="outlined" color="success" onClick={handleClick} startIcon={<span>👍</span>}>
                                                     Yes
                                                 </Button>
-                                                <Button variant="outlined" color="error" onClick={handleClick} startIcon={<span>👎</span>}>
+                                                <Button variant="outlined" color="error" onClick={handleDislike} startIcon={<span>👎</span>}>
                                                     No
                                                 </Button>
                                                 <Snackbar
@@ -270,7 +281,7 @@ export default function NewsDetail() {
                                 </Paper>
                             </Box>
 
-                            {/* Right part - News List */}
+                            {/* News List */}
                             <Box sx={{flex: 1, overflow: 'auto', height: '90vh'}}>
                                 <Typography component="h2" variant="h6" sx={{mb: 2}}>
                                     Personalized News Curation

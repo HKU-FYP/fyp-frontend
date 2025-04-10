@@ -35,3 +35,14 @@ export const getNewsDashboardSummary = (user_stock_id) => {
             throw err;
         });
 }
+
+export const dislikeNews = (news_id) => {
+    return axios
+        .post(`${BASE_URL}/news/${news_id}/dislike`, {}, {
+            headers: getAuthHeaders(),
+        })
+        .then((resp) => resp.data)
+        .catch((err) => {
+            throw err;
+        });
+}

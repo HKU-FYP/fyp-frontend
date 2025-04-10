@@ -31,7 +31,7 @@ function App() {
             <Route path="/signup" element={<SignUp />} />
             <Route path="/stock-input" element={<StockInput />} />
             <Route path="dashboard" element={<Dashboard />} />
-            <Route path="/dashboard/news/:id" element={<NewsDetail />} />
+            <Route path="/dashboard/news/:user_stock_id/:id" element={<NewsDetail />} />
           </Routes>
         </Router>
       </ThemeProvider>

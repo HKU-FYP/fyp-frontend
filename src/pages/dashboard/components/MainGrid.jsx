@@ -203,6 +203,7 @@ export default function MainGrid() {
                         <Grid key={index} size={{xs: 12, sm: 12, lg: 12}}>
                             <StatCardNewsList
                                 {...card}
+                                user_stock_id={selectedStockGlobal.user_stock_id}
                                 highlight = {card.sentiment === "Highly Positive" || card.sentiment === "Highly Negative"}
                             />
                         </Grid>

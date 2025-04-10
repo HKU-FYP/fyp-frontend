@@ -2,15 +2,17 @@ import Skeleton from '@mui/material/Skeleton';
 import Stack from '@mui/material/Stack';
 import Button from "@mui/material/Button";
 import {useState, useEffect} from 'react';
-import {useParams} from 'react-router-dom';
-import {Typography, Box, Paper, Divider, Card, CardContent, List, ListItem, ListItemText, Alert, Snackbar} from "@mui/material";
-import {getNewsDetailByNewsId} from "../../../api/news.js";
+import {useParams, useSearchParams} from 'react-router-dom';
+import {Typography, Box, Paper, Divider, Card, CardContent, List, ListItem, ListItemText, Alert, Snackbar, Grid} from "@mui/material";
+import {getNewsDetailByNewsId, getNewsByUserStockId} from "../../../api/news.js";
 import Chip from "@mui/material/Chip";
 import * as React from "react";
+import StatCardNewsList from "./StatCardNewsList.jsx";
 
 export default function NewsDetail() {
     const [selectedButton, setSelectedButton] = useState('Intermediate');
-    const {id} = useParams();
+    const {id, user_stock_id} = useParams();
+    const [newsData, setNewsData] = useState([]);
     const [newsDetail, setNewsDetail] = useState(null);
 
     const [open, setOpen] = React.useState(false);
@@ -27,12 +29,26 @@ export default function NewsDetail() {
         setOpen(false);
     };
 
-    useEffect(() => {
-        getNewsDetailByNewsId(id)
-            .then((data) => setNewsDetail(data))
-            .catch((error) => console.error("Failed to fetch news detail:", error));
-    }, [id]);
-
+        useEffect(() => {
+            const fetchNewsDetail = async () => {
+                const detail = await getNewsDetailByNewsId(id);
+                setNewsDetail(detail);
+            };
+    
+            fetchNewsDetail();
+        }, [id]);  // id가 바뀔 때만 실행
+    
+        
+        useEffect(() => {
+            const fetchNewsData = async () => {
+                const allNews = await getNewsByUserStockId(user_stock_id);
+                setNewsData(allNews);
+            };
+    
+            if (user_stock_id) {
+                fetchNewsData();
+            }
+        }, [user_stock_id]); 
 
     const handleButtonClick = (button) => {
         setSelectedButton(button);
@@ -50,15 +66,12 @@ export default function NewsDetail() {
     const { bg, text } = sentimentColorMap[newsDetail.sentiment] || { bg: "#e0e0e0", text: "#000" };
 
 
-
     return (
         <Box sx={{
             display: 'flex',
-            justifyContent: 'center',
-            paddingX: '30px',
-            paddingTop: '40px',
-            minHeight: '100vh',
-            backgroundColor: '#f4f6f8',
+            flexDirection: 'column',
+            gap: 3,
+            padding: '30px'
         }}>
             <Paper elevation={6} sx={{
                 maxWidth: '900px',
@@ -210,6 +223,25 @@ export default function NewsDetail() {
                     </Box>
                 </Stack>
             </Paper>
+
+            {/* newsList */}
+            {newsData.length > 0 && (
+                <>
+                    <Typography variant="h6" sx={{marginTop: 4}}>
+                        Related News with Similar Sentiment
+                    </Typography>
+                    <Grid container spacing={2}>
+                        {newsData.map((news) => (
+                            <Grid item xs={12} key={news.id}>
+                                <StatCardNewsList 
+                                    {...news} 
+                                    user_stock_id={parseInt(user_stock_id)}
+                                />
+                            </Grid>
+                        ))}
+                    </Grid>
+                </>
+            )}
         </Box>
     );
 }

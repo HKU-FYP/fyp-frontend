@@ -10,7 +10,7 @@ import Button from '@mui/material/Button';
 import Link from "@mui/material/Link";
 import Chip from "@mui/material/Chip";
 
-function StatCardNewsList({id, title, link, sentiment, published_date, highlight, one_sentence_summary}) {
+function StatCardNewsList({id, title, link, sentiment, published_date, highlight, one_sentence_summary, user_stock_id}) {
     const theme = useTheme();
     const navigate = useNavigate();
     const formattedDate = new Date(published_date).toLocaleString('en-US');
@@ -80,7 +80,7 @@ function StatCardNewsList({id, title, link, sentiment, published_date, highlight
 
                     <Stack direction="row" justifyContent="space-between" alignItems="center" marginTop="-5px" marginBottom="-5px">
                         <Link href={link}>Link to original news</Link>
-                        <Button variant="outlined" onClick={() => navigate(`/dashboard/news/${id}`)}>See Details</Button>
+                        <Button variant="outlined" onClick={() => navigate(`/dashboard/news/${user_stock_id}/${id}`)}>See Details</Button>
                     </Stack>
                 </Stack>
             </CardContent>
@@ -95,7 +95,8 @@ StatCardNewsList.propTypes = {
     sentiment: PropTypes.string.isRequired,
     published_date: PropTypes.string.isRequired,
     highlight: PropTypes.bool,
-    one_sentence_summary: PropTypes.string.isRequired
+    one_sentence_summary: PropTypes.string.isRequired,
+    user_stock_id: PropTypes.number.isRequired
 };
 
 export default StatCardNewsList;

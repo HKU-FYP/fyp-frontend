@@ -127,8 +127,81 @@ export default function NewsDetail() {
                             flexDirection: "row", 
                             gap: 2
                         }}>
-                            {/* Left part - News Detail */}
-                            <Box sx={{flex:1.3}}>
+                          
+
+                            {/* News List */}
+                            <Box sx={{flex: 1, overflow: 'auto', height: '90vh'}}>
+                                <Typography component="h2" variant="h6" sx={{mb: 2}}>
+                                    Personalized News Curation
+                                </Typography>
+
+                                <Paper elevation={1} sx={{ padding: 2, marginBottom: 2 }}>
+                                    <Typography variant="subtitle1" sx={{ fontWeight: 'bold'}}> 🧠 Quick Summary </Typography>
+                                    
+                                    <Typography variant="body2" sx={{ mb: 2 }}>
+                                        {(() => {
+                                            const sentimentCounts = {};
+                                            for (let item of newsData) {
+                                                const sentiment = item.sentiment;
+                                                if (sentimentCounts[sentiment]) {
+                                                    sentimentCounts[sentiment]++;
+                                                } else {
+                                                    sentimentCounts[sentiment] = 1;
+                                                }
+                                            }
+                                            const orderedSentiments = ["Strong_Positive", "Positive", "Neutral", "Negative", "Strong_Negative"];
+                                            const summaryList = orderedSentiments
+                                                .filter(sentiment => sentimentCounts[sentiment])
+                                                .map(sentiment => `${sentiment}: ${sentimentCounts[sentiment]}`);
+
+                                            return summaryList.join(" · ");
+                                        })()}
+                                    </Typography>
+
+                                    {newsSummary.positive_summary_list.length > 0 && (
+                                        <Box sx={{ mt: 1 }}>
+                                            <Typography variant="subtitle2" color="success.main">Key Positive News</Typography>
+                                            <ul style={{ margin: 0, paddingLeft: 20 }}>
+                                                {newsSummary.positive_summary_list.map((summary, index) => (
+                                                    <li key={index}>
+                                                        <Typography variant="body2">{summary}</Typography>
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        </Box>
+                                    )}
+                                    {newsSummary.negative_summary_list.length > 0 && (
+                                        <Box sx={{ mt: 1 }}>
+                                            <Typography variant="subtitle2" color="error.main">Key Negative News</Typography>
+                                            <ul style={{ margin: 0, paddingLeft: 20 }}>
+                                                {newsSummary.negative_summary_list.map((summary, index) => (
+                                                    <li key={index}>
+                                                        <Typography variant="body2">{summary}</Typography>
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        </Box>
+                                    )}
+                                    {newsSummary.positive_summary_list.length === 0 && newsSummary.negative_summary_list.length === 0 && (
+                                        <Typography variant="body2" sx={{ mt: 1 }}>No news summary available</Typography>
+                                    )}
+                                </Paper>
+
+                                <Grid container spacing={2} columns={12}>
+                                    {newsData.map((news) => (
+                                        <Grid item key={news.id} xs={12} sm={12} lg={12}>
+                                            <StatCardNewsList
+                                                {...news}
+                                                user_stock_id={parseInt(user_stock_id)}
+                                                highlight={news.sentiment === "Highly Positive" || news.sentiment === "Highly Negative"}
+                                            />
+                                        </Grid>
+                                    ))}
+                                </Grid>
+                            </Box>
+
+                              {/* Left part - News Detail */}
+                              <Box sx={{flex:1.3}}>
                                 <Paper elevation={6} sx={{
                                     maxWidth: '900px',
                                     width: '100%',
@@ -279,77 +352,6 @@ export default function NewsDetail() {
                                         </Box>
                                     </Stack>
                                 </Paper>
-                            </Box>
-
-                            {/* News List */}
-                            <Box sx={{flex: 1, overflow: 'auto', height: '90vh'}}>
-                                <Typography component="h2" variant="h6" sx={{mb: 2}}>
-                                    Personalized News Curation
-                                </Typography>
-
-                                <Paper elevation={1} sx={{ padding: 2, marginBottom: 2 }}>
-                                    <Typography variant="subtitle1" sx={{ fontWeight: 'bold'}}> 🧠 Quick Summary </Typography>
-                                    
-                                    <Typography variant="body2" sx={{ mb: 2 }}>
-                                        {(() => {
-                                            const sentimentCounts = {};
-                                            for (let item of newsData) {
-                                                const sentiment = item.sentiment;
-                                                if (sentimentCounts[sentiment]) {
-                                                    sentimentCounts[sentiment]++;
-                                                } else {
-                                                    sentimentCounts[sentiment] = 1;
-                                                }
-                                            }
-                                            const orderedSentiments = ["Highly Positive", "Positive", "Neutral", "Negative", "Highly Negative"];
-                                            const summaryList = orderedSentiments
-                                                .filter(sentiment => sentimentCounts[sentiment])
-                                                .map(sentiment => `${sentiment}: ${sentimentCounts[sentiment]}`);
-
-                                            return summaryList.join(" · ");
-                                        })()}
-                                    </Typography>
-
-                                    {newsSummary.positive_summary_list.length > 0 && (
-                                        <Box sx={{ mt: 1 }}>
-                                            <Typography variant="subtitle2" color="success.main">Key Positive News</Typography>
-                                            <ul style={{ margin: 0, paddingLeft: 20 }}>
-                                                {newsSummary.positive_summary_list.map((summary, index) => (
-                                                    <li key={index}>
-                                                        <Typography variant="body2">{summary}</Typography>
-                                                    </li>
-                                                ))}
-                                            </ul>
-                                        </Box>
-                                    )}
-                                    {newsSummary.negative_summary_list.length > 0 && (
-                                        <Box sx={{ mt: 1 }}>
-                                            <Typography variant="subtitle2" color="error.main">Key Negative News</Typography>
-                                            <ul style={{ margin: 0, paddingLeft: 20 }}>
-                                                {newsSummary.negative_summary_list.map((summary, index) => (
-                                                    <li key={index}>
-                                                        <Typography variant="body2">{summary}</Typography>
-                                                    </li>
-                                                ))}
-                                            </ul>
-                                        </Box>
-                                    )}
-                                    {newsSummary.positive_summary_list.length === 0 && newsSummary.negative_summary_list.length === 0 && (
-                                        <Typography variant="body2" sx={{ mt: 1 }}>No news summary available</Typography>
-                                    )}
-                                </Paper>
-
-                                <Grid container spacing={2} columns={12}>
-                                    {newsData.map((news) => (
-                                        <Grid item key={news.id} xs={12} sm={12} lg={12}>
-                                            <StatCardNewsList
-                                                {...news}
-                                                user_stock_id={parseInt(user_stock_id)}
-                                                highlight={news.sentiment === "Highly Positive" || news.sentiment === "Highly Negative"}
-                                            />
-                                        </Grid>
-                                    ))}
-                                </Grid>
                             </Box>
                         </Box>
                     </Stack>
